@@ -9,6 +9,6 @@ Steps
 
 1. In the terminal, clone this repository and navigate into ``ephi-reportPulse``
 
-2. run ``sudo npm install``
+2. Install dependecies; run ``sudo npm install``
 
-3. run ``sudo sails lift``
+3. Start server; run ``sudo sails lift``
