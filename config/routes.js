@@ -37,6 +37,9 @@ module.exports.routes = {
 
   'GET /claim-account':      { action: 'entrance/view-claim-account' },
 
+  'GET /todo': { action: 'todo/view-todo-list' },
+  'GET /todo/:id': { action: 'todo/view-todo' },
+
 
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
@@ -66,6 +69,10 @@ module.exports.routes = {
   'DELETE  /api/v1/friends/:id':                      { action: 'friends/remove-friend' },
   'POST   /api/v1/friends':                           { action: 'friends/add-friends' },
   'PUT    /api/v1/approve-friend':                    { action: 'friends/approve-friend' },
+
+  // todo
+  'POST /api/v1/todo/add-todo': { action: 'todo/add-todo' },
+  'PATCH /api/v1/todo/update-todo': { action: 'todo/update-todo' },
 
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗

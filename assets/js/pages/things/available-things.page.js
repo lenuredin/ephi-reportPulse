@@ -56,6 +56,7 @@ parasails.registerPage('available-things', {
     // Attach any initial data from the server.
     _.extend(this, SAILS_LOCALS);
     this.things = this._marshalEntries(this.things);
+    console.log(this.$router);
   },
 
   mounted: function() {

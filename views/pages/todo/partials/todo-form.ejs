@@ -1,0 +1,31 @@
+
+<!-- topic  -->
+<div class="form-group">
+  <label for="topic">Topic</label>
+  <input class="form-control" id="topic" name="topic" type="text"  :class="[formErrors.topic ? 'is-invalid' : '']" v-model.trim="todo.topic" placeholder="Laundry" autofocus>
+  <div class="invalid-feedback" v-if="formErrors.topic">Please choose a topic for your Todo.</div>
+</div>
+
+<!-- description -->
+<div class="form-group">
+  <label for="message">Description</label>
+  <textarea class="form-control" id="description" name="description" :class="[formErrors.description ? 'is-invalid' : '']" v-model.trim="todo.description" placeholder="Collect the laundry from the laundry shop"></textarea>
+  <div class="invalid-feedback" v-if="formErrors.description">Description of ToDo cannot be empty.</div>
+</div>
+
+<!-- description -->
+<div v-if="todo.id" class="form-group">
+  <label for="complete">Complete?</label>
+  <input type="checkbox" id="complete" name="complete" v-model="todo.complete"/>
+</div>
+
+<!-- alert! -->
+<p class="text-danger" v-if="cloudError">
+  <small>An error occured while processing your request. Please check your information and try again</small>
+</p>
+
+<!-- buttons -->
+<div>
+  <ajax-button v-if="!todo.id" class="btn btn-dark btn-lg btn-block" type="submit" :syncing="syncing">Add</ajax-button>
+  <ajax-button v-if="todo.id" class="btn btn-dark btn-lg btn-block" type="submit" :syncing="syncing">Update</ajax-button>
+</div>

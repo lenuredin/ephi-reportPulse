@@ -1,0 +1,51 @@
+<div id="todo-list" v-cloak>
+
+  <!-- container / header -->
+  <div class="container">
+    <div class="page-header text-center">
+      <h1>ToDo</h1>
+      <h2>View your ToDo list.</h2>
+      <div class="header-buttons">
+        <button class="btn btn-outline-primary" @click="clickAddButton()">Add ToDo</button>
+      </div>
+    </div>
+
+    <!-- if list -->
+    <div class="listings" v-if="todo.length > 0">
+
+      <!-- the todo list -->
+      <h4 v-if="todoItems">ToDo</h4>
+
+      <div class="list-group" :key="'todo'+item.id" v-for="item in todo">
+        <a v-if="!item.complete" v-bind:href="'/todo/'+item.id" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ item.topic }}</h5>
+            <small class="text-muted">3 days ago</small>
+          </div>
+          <p class="mb-1">{{ item.description }}</p>
+        </a>
+      </div>
+
+
+      <!-- the todo list -->
+      <h4 v-if="completeItems">Complete</h4>
+
+      <div class="list-group" :key="'todo'+item.id" v-for="item in todo">
+        <a v-if="item.complete" v-bind:href="'/todo/'+item.id" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ item.topic }}</h5>
+            <small class="text-muted">3 days ago</small>
+          </div>
+          <p class="mb-1">{{ item.description }}</p>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- else display message -->
+    <div class="empty text-center" v-else><p>You have not uploaded any ToDo items. <a href="/todo/new" @click="clickAddButton()">Add something</a> to get started!</p></div>
+
+  </div>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

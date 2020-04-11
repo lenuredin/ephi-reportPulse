@@ -5,7 +5,7 @@
 } %><!DOCTYPE html>
 <html>
   <head>
-    <title>Ration</title>
+    <title>ephiPulse</title>
 
     <% /* Viewport tag for sensible mobile support */ %>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -57,6 +57,8 @@
         <div class="navbar-nav flex-row">
           <!-- LOGGED-IN NAVIGATION -->
           <% if(me) { %>
+          <a class="nav-item nav-link text-dark ml-2 mr-2 <%= typeof currentSection !== 'undefined' && currentSection === 'todo' ? 'current' : ''%>"
+              href="/todo">ToDo</a>
           <a class="nav-item nav-link text-dark ml-2 mr-2 <%= typeof currentSection !== 'undefined' && currentSection === 'friends' ? 'current' : ''%>"
               href="/friends">Friends</a>
           <a class="nav-item nav-link text-dark ml-2 mr-2 <%= typeof currentSection !== 'undefined' && currentSection === 'things' ? 'current' : ''%>"
@@ -107,15 +109,10 @@
 
       <footer id="page-footer" class="navbar navbar-light justify-content-between flex-row-reverse">
         <div class="nav">
-          <small class="nav-item"><a class="nav-link text-info" target="_blank" href="https://github.com/mikermcneil/ration">Source code</a></small>
-          <small class="nav-item"><a class="nav-link text-info" href="/contact">Contact<span class="d-none d-sm-inline"> us</span></a></small>
-          <small class="nav-item"><a class="nav-link text-info" href="/legal/terms">Terms<span class="d-none d-sm-inline"> of Use</span></a></small>
-          <small class="nav-item"><a class="nav-link text-info" href="/legal/privacy">Privacy<span class="d-none d-sm-inline"> policy</span></a></small>
           <% if(me) { %>
           <small class="nav-item"><a class="nav-link text-info" href="/logout">Sign out</a></small>
           <% } %>
         </div>
-        <small class="copy">Copyright &copy; 2020 <a target="_blank" href="https://sailsjs.com/about">Sails Co.</a> <br class="xs-only"/>All rights reserved.</small>
       </footer>
     </div>
 
@@ -171,6 +168,8 @@
     <script src="/js/pages/legal/privacy.page.js"></script>
     <script src="/js/pages/legal/terms.page.js"></script>
     <script src="/js/pages/things/available-things.page.js"></script>
+    <script src="/js/pages/todo/todo-list.page.js"></script>
+    <script src="/js/pages/todo/todo.page.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

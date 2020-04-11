@@ -1,0 +1,55 @@
+<div id="todo" v-cloak>
+
+  <!-- container / header -->
+  <div class="container">
+
+    <div class="page-header text-center">
+      <h1>ToDo</h1>
+      <h2 v-if="!todo.id">Add ToDo item.</h2>
+      <h2 v-if="todo.id">Edit ToDo item.</h2>
+    </div>
+    <p v-if="!todo.id" class="text-center">Have lots of tasks? Add them to the list, you will feel better.</p>
+    <p v-if="todo.id" class="text-center">Update your tasks and check them off your ToDo list!</p>
+
+    <!-- container -->
+    <div class="todo-form-container" v-if="!cloudSuccess">
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/todo" title="Cancel">
+            <i class="fa fa-lg fa-caret-left"></i> Go Back</a>
+          </li>
+        </ol>
+      </nav>
+
+      <hr/>
+      <!-- ajax form new -->
+      <ajax-form v-if="!todo.id" action="addTodo" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+        <!-- todo form -->
+        <%- include('partials/todo-form') %>
+      </ajax-form>
+
+      <!-- ajax form update -->
+      <ajax-form v-if="todo.id" action="updateTodo" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+        <!-- todo form -->
+        <%- include('partials/todo-form') %>
+      </ajax-form>
+    </div>
+
+  </div>
+
+  <% /* "Success" modal */ %>
+  <modal v-if="confirmSuccessModalOpen" v-cloak>
+    <div class="modal-header">
+      <i class="fa fa-lg fa-check-circle" style="color:teal;"></i>
+      <h5 class="modal-title">Success!</h5>
+    </div>
+    <div class="modal-body">
+      <p v-if="!todo.id">Your ToDo item has now been added!</p>
+      <p v-if="todo.id">Your ToDo item has now been updated!</p>
+      <!-- <small>Now you can manage the ToDo item from the ToDo list.</small> -->
+    </div>
+  </modal>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
