@@ -73,6 +73,7 @@ module.exports.routes = {
   // todo
   'POST /api/v1/todo/add-todo': { action: 'todo/add-todo' },
   'PATCH /api/v1/todo/update-todo': { action: 'todo/update-todo' },
+  'DELETE /api/v1/todo/remove-todo': { action: 'todo/remove-todo' },
 
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗

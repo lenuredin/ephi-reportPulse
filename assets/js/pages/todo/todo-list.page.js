@@ -12,6 +12,25 @@ parasails.registerPage('todo-list', {
     // show completed list
     completeItems: false,
 
+    // nothing selected
+    selectedTodo: undefined,
+
+    // Main syncing/loading state for this page.
+    syncing: false,
+
+    // For tracking client-side validation errors in our form.
+    // > Has property set to `true` for each invalid property in `todo`.
+    formErrors: { /* … */ },
+
+    // Server error state for the form
+    cloudError: '',
+
+    // Success state when form has been submitted
+    cloudSuccess: false,
+
+    // confirm todo modal
+    confirmDeleteTodoModalOpen: false,
+
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -24,7 +43,8 @@ parasails.registerPage('todo-list', {
     this.completeItems = this._displayCompleteList(this.todo);
   },
   mounted: async function() {
-    //…
+    // hide alert
+    $('.alert').hide();
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -59,6 +79,43 @@ parasails.registerPage('todo-list', {
       // why is this not working?
       // this.goto('/todo/new');
       window.location.href = '/todo/new';
+    },
+
+    // click to open delete confirmation
+    clickDeleteTodo: function(todoId) {
+      // select todo
+      this.selectedTodo = _.find(this.todo, { id: todoId });
+      // Open the modal.
+      this.confirmDeleteTodoModalOpen = true;
+    },
+
+    // close / cancel model
+    closeDeleteTodoModal: function() {
+      this.selectedTodo = undefined;
+      this.confirmDeleteTodoModalOpen = false;
+      this.cloudError = '';
+    },
+
+    // ajax form action
+    handleParsingDeleteTodoForm: function() {
+      return {
+        id: this.selectedTodo.id
+      };
+    },
+
+    // sent todo delete
+    submittedDeleteTodoForm: function(){
+      // Remove the thing from the list
+      _.remove(this.todo, { id: this.selectedTodo.id });
+
+      // alert
+      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
+        $('.alert').slideUp(500);
+      });
+
+      // Close the modal.
+      this.selectedTodo = undefined;
+      this.confirmDeleteTodoModalOpen = false;
     }
   }
 });

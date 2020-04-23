@@ -10,6 +10,10 @@
       </div>
     </div>
 
+    <div class="alert alert-success" role="alert">
+      Todo item successfully removed!
+    </div>
+
     <!-- if list -->
     <div class="listings" v-if="todo.length > 0">
 
@@ -17,13 +21,21 @@
       <h4 v-if="todoItems">ToDo</h4>
 
       <div class="list-group" :key="'todo'+item.id" v-for="item in todo">
+
+        <div v-if="!item.complete" class="list-options">
+          <span class="options-button" data-toggle="tooltip" data-placement="top" title="Delete" @click="clickDeleteTodo(item.id)"><span class="fa fa-trash-o text-danger"></span></span>
+        </div>
+
         <a v-if="!item.complete" v-bind:href="'/todo/'+item.id" class="list-group-item list-group-item-action flex-column align-items-start">
+
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ item.topic }}</h5>
             <small class="text-muted">3 days ago</small>
           </div>
           <p class="mb-1">{{ item.description }}</p>
+
         </a>
+
       </div>
 
 
@@ -31,13 +43,21 @@
       <h4 v-if="completeItems">Complete</h4>
 
       <div class="list-group" :key="'todo'+item.id" v-for="item in todo">
+
+        <div v-if="item.complete" class="list-options">
+          <span class="options-button" data-toggle="tooltip" data-placement="top" title="Delete" @click="clickDeleteTodo(item.id)"><span class="fa fa-trash-o text-danger"></span></span>
+        </div>
+
         <a v-if="item.complete" v-bind:href="'/todo/'+item.id" class="list-group-item list-group-item-action flex-column align-items-start">
+
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ item.topic }}</h5>
             <small class="text-muted">3 days ago</small>
           </div>
           <p class="mb-1">{{ item.description }}</p>
+
         </a>
+
       </div>
 
     </div>
@@ -46,6 +66,27 @@
     <div class="empty text-center" v-else><p>You have not uploaded any ToDo items. <a href="/todo/new" @click="clickAddButton()">Add something</a> to get started!</p></div>
 
   </div>
+
+
+  <% /* "Delete thing" modal */ %>
+  <modal v-if="confirmDeleteTodoModalOpen && selectedTodo" v-cloak key="delete" @close="closeDeleteTodoModal()">
+    <div class="modal-header">
+      <h5 class="modal-title">Remove {{ selectedTodo.topic }}?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="removeTodo" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingDeleteTodoForm" @submitted="submittedDeleteTodoForm()">
+      <div class="modal-body">
+        <p>Are you sure you want to remove this {{selectedTodo.topic || 'item'}}?</p>
+        <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again</small></p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">No</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-danger ml-1">Remove</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
 
 </div>
 <%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
