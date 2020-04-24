@@ -64,7 +64,7 @@ module.exports.custom = {
   fromName: 'The Ration Team',
 
   // Email address for receiving support messages & other correspondences.
-  internalEmailAddress: 'support+development@example.com',
+  internalEmailAddress: 'ephiPulse@gmail.com',
 
   // Whether to require proof of email address ownership any time a new user
   // signs up, or when an existing user attempts to change their email address.

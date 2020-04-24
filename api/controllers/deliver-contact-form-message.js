@@ -38,8 +38,12 @@ module.exports = {
 
   },
 
-
   exits: {
+
+    error: {
+      responseType: 'badRequest',
+      description: 'There was an error sending email!'
+    },
 
     success: {
       description: 'The message was sent successfully.'
@@ -60,17 +64,36 @@ your custom config -- usually in \`config/custom.js\`, \`config/staging.js\`,
       );
     }
 
-    await sails.helpers.sendTemplateEmail.with({
+    // await sails.helpers.sendTemplateEmail.with({
+    //   to: sails.config.custom.internalEmailAddress,
+    //   subject: 'New Contact Form Message',
+    //   template: 'internal/email-contact-form',
+    //   layout: false,
+    //   templateData: {
+    //     contactName: fullName,
+    //     contactEmail: emailAddress,
+    //     topic: topic,
+    //     message: message
+    //   }
+    // });
+
+    // moment
+    var moment = require('moment');
+
+    // send email
+    sails.hooks.email.send( 'email-contact-form', {
+      contactName: fullName,
+      contactEmail: emailAddress,
+      topic: topic,
+      message: message
+    },{
       to: sails.config.custom.internalEmailAddress,
-      subject: 'New Contact Form Message',
-      template: 'internal/email-contact-form',
-      layout: false,
-      templateData: {
-        contactName: fullName,
-        contactEmail: emailAddress,
-        topic: topic,
-        message: message
-      }
+      subject: 'New Contact Form Message - ' + moment().format('LLL'),
+    }, function(err) {
+      // return
+      if ( err ) return 'error';
+      // return
+      return;
     });
 
   }
