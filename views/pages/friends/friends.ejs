@@ -71,6 +71,10 @@
               <input class="form-control" type="text" v-model="addFriendsFormData.friends[index].fullName" :placeholder="index === 0 ? 'Ralph' : index === 1 ? 'Donny' : index === 2 ? 'Leo' : 'Full name'">
             </div>
             <div class="col">
+              <label v-if="index === 0">Phone</label>
+              <input class="form-control" type="text" v-model="addFriendsFormData.friends[index].phoneNumber" :placeholder="index === 0 ? '+251112758621' : index === 1 ? '+251112758622' : index === 2 ? '+251112758623' : 'Phone number'">
+            </div>
+            <div class="col">
               <label v-if="index === 0">Email Address</label>
               <input class="form-control" type="email" v-model="addFriendsFormData.friends[index].emailAddress" :placeholder="index === 0 ? 'raphael@example.com' : index === 1 ? 'donatello@example.com' : index === 2 ? 'leonardo@example.com' : 'Email address'">
             </div>

@@ -154,6 +154,99 @@ email status until they click the link in the confirmation email.`
       example: 1502844074211
     },
 
+
+    /* EXTEND BASE MODEL */
+    // extend default seed profile for requirements of ephiPulse
+
+    validated: {
+      type: 'boolean',
+      description: 'On registartion, a user must first be validated by ADMIN to view data & start reporting',
+      defaultsTo: false
+    },
+
+    phoneNumber: {
+      type: 'string',
+      required: true,
+      description: 'Phone number of user',
+      example: '+25195229522'
+    },
+
+    position: {
+      type: 'string',
+      description: 'Position of user',
+      example: 'Surveillance Officer'
+    },
+
+    // admin0
+    admin0pcode: {
+      type: 'string',
+      description: 'Country Pcode',
+      defaultsTo: 'ET'
+    },
+    admin0name: {
+      type: 'string',
+      description: 'Country Name',
+      defaultsTo: 'Ethiopia'
+    },
+    admin0administrator: {
+      type: 'boolean',
+      description: 'Is this user country level (national) ADMIN',
+      defaultsTo: false
+    },
+
+    // admin1
+    admin1pcode: {
+      type: 'string',
+      description: 'Region Name',
+      example: 'Somali'
+    },
+    admin1name: {
+      type: 'string',
+      description: 'Region Pcode',
+      example: 'ET05'
+    },
+    admin1administrator: {
+      type: 'boolean',
+      description: 'Is this user Regional level ADMIN',
+      defaultsTo: false
+    },
+
+    // admin2
+    admin2pcode: {
+      type: 'string',
+      description: 'Zone Name',
+      example: 'Jaffar'
+    },
+    admin2name: {
+      type: 'string',
+      description: 'Zone Pcode',
+      example: 'ET0503'
+    },
+    admin2administrator: {
+      type: 'boolean',
+      description: 'Is this user Zonal level ADMIN',
+      defaultsTo: false
+    },
+
+    // admin3
+    admin3pcode: {
+      type: 'string',
+      description: 'Woreda Name',
+      example: 'Ararso'
+    },
+    admin3name: {
+      type: 'string',
+      description: 'Woreda Pcode',
+      example: 'ET050395'
+    },
+    admin3administrator: {
+      type: 'boolean',
+      description: 'Is this user Woreda level ADMIN',
+      defaultsTo: false
+    },
+
+
+
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

@@ -14,12 +14,14 @@ module.exports = {
       type: [
         {
           fullName: 'string',
+          phoneNumber: 'string',
           emailAddress: 'string'
         }
       ],
       example: [
         {
           fullName: 'Rory Milliard',
+          phoneNumber: '+251112758621',
           emailAddress: 'rory@example.com'
         }
       ],
@@ -42,22 +44,23 @@ module.exports = {
         .members([this.req.me.id]);
 
         // Send a notification email.
-        await sails.helpers.sendTemplateEmail.with({
-          to: friend.emailAddress,
-          subject: `${this.req.me.fullName} wants to share stuff on Ration!`,
-          template: 'email-new-friend-request',
-          templateData: {
-            potentialFriendFullName: this.req.me.fullName,
-            fullName: friend.fullName,
-            baseUrl: sails.config.custom.baseUrl
-          }
-        });
+        // await sails.helpers.sendTemplateEmail.with({
+        //   to: friend.emailAddress,
+        //   subject: `${this.req.me.fullName} wants to share stuff on Ration!`,
+        //   template: 'email-new-friend-request',
+        //   templateData: {
+        //     potentialFriendFullName: this.req.me.fullName,
+        //     fullName: friend.fullName,
+        //     baseUrl: sails.config.custom.baseUrl
+        //   }
+        // });
       }
       else {
         // Otherwise, we need to create a new user.
         var token = await sails.helpers.strings.random('url-friendly');
         var newUser = await User.create({
           fullName: friend.fullName,
+          phoneNumber: friend.phoneNumber,
           emailAddress: friend.emailAddress,
           emailProofToken: token,
         }).fetch();
@@ -67,17 +70,17 @@ module.exports = {
         .members([this.req.me.id]);
 
         // Send a notification email.
-        await sails.helpers.sendTemplateEmail.with({
-          to: friend.emailAddress,
-          subject: `${this.req.me.fullName} wants to share stuff on Ration!`,
-          template: 'email-new-user-invite',
-          templateData: {
-            potentialFriendFullName: this.req.me.fullName,
-            fullName: friend.fullName,
-            baseUrl: sails.config.custom.baseUrl,
-            token: token
-          }
-        });
+        // await sails.helpers.sendTemplateEmail.with({
+        //   to: friend.emailAddress,
+        //   subject: `${this.req.me.fullName} wants to share stuff on Ration!`,
+        //   template: 'email-new-user-invite',
+        //   templateData: {
+        //     potentialFriendFullName: this.req.me.fullName,
+        //     fullName: friend.fullName,
+        //     baseUrl: sails.config.custom.baseUrl,
+        //     token: token
+        //   }
+        // });
       }
 
     }//∞

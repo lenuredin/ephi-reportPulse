@@ -28,6 +28,9 @@ parasails.registerPage('signup', {
   beforeMount: function() {
     // Attach any initial data from the server.
     _.extend(this, SAILS_LOCALS);
+
+    console.log( this.admin2 );
+
   },
   mounted: function() {
     this.$focus('[autofocus]');
@@ -65,6 +68,11 @@ parasails.registerPage('signup', {
         this.formErrors.fullName = true;
       }
 
+      // Validate full name:
+      if(!argins.phoneNumber) {
+        this.formErrors.phoneNumber = true;
+      }
+
       // Validate email:
       var isValidEmailAddress = parasails.require('isValidEmailAddress');
       if(!argins.emailAddress || !isValidEmailAddress(argins.emailAddress)) {
@@ -82,9 +90,9 @@ parasails.registerPage('signup', {
       }
 
       // Validate ToS agreement:
-      if(!argins.agreed) {
-        this.formErrors.agreed = true;
-      }
+      // if(!argins.agreed) {
+      //   this.formErrors.agreed = true;
+      // }
 
       // If there were any issues, they've already now been communicated to the user,
       // so simply return undefined.  (This signifies that the submission should be

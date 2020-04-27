@@ -19,6 +19,13 @@ the account verification message.)`,
 
   inputs: {
 
+    fullName:  {
+      required: true,
+      type: 'string',
+      example: 'Frida Kahlo de Rivera',
+      description: 'The user\'s full name.',
+    },
+
     emailAddress: {
       required: true,
       type: 'string',
@@ -27,19 +34,19 @@ the account verification message.)`,
       extendedDescription: 'Must be a valid email address.',
     },
 
+    phoneNumber: {
+      required: true,
+      type: 'string',
+      description: 'The phone numner for the new account, e.g. +251112758622.',
+      extendedDescription: 'Must be a valid phone number.',
+    },
+
     password: {
       required: true,
       type: 'string',
       maxLength: 200,
       example: 'passwordlol',
       description: 'The unencrypted password to use for the new account.'
-    },
-
-    fullName:  {
-      required: true,
-      type: 'string',
-      example: 'Frida Kahlo de Rivera',
-      description: 'The user\'s full name.',
     }
 
   },
@@ -73,9 +80,10 @@ the account verification message.)`,
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
     var newUserRecord = await User.create(_.extend({
-      emailAddress: newEmailAddress,
-      password: await sails.helpers.passwords.hashPassword(inputs.password),
       fullName: inputs.fullName,
+      emailAddress: newEmailAddress,
+      phoneNumber: inputs.phoneNumber,
+      password: await sails.helpers.passwords.hashPassword(inputs.password),
       tosAcceptedByIp: this.req.ip
     }, sails.config.custom.verifyEmailAddresses? {
       emailProofToken: await sails.helpers.strings.random('url-friendly'),
@@ -103,15 +111,16 @@ the account verification message.)`,
 
     if (sails.config.custom.verifyEmailAddresses) {
       // Send "confirm account" email
-      await sails.helpers.sendTemplateEmail.with({
-        to: newEmailAddress,
-        subject: 'Please confirm your account',
-        template: 'email-verify-account',
-        templateData: {
-          fullName: inputs.fullName,
-          token: newUserRecord.emailProofToken
-        }
-      });
+      // await sails.helpers.sendTemplateEmail.with({
+      //   to: newEmailAddress,
+      //   subject: 'Please confirm your account',
+      //   template: 'email-verify-account',
+      //   templateData: {
+      //     fullName: inputs.fullName,
+      //     token: newUserRecord.emailProofToken
+      //   }
+      // });
+      sails.log.info('ToDo: Send email address');
     } else {
       sails.log.info('Skipping new account email verification... (since `verifyEmailAddresses` is disabled)');
     }
