@@ -19,7 +19,7 @@ the account verification message.)`,
 
   inputs: {
 
-    fullName:  {
+    fullName: {
       required: true,
       type: 'string',
       example: 'Frida Kahlo de Rivera',
@@ -41,13 +41,56 @@ the account verification message.)`,
       extendedDescription: 'Must be a valid phone number.',
     },
 
+    position:  {
+      required: true,
+      type: 'string',
+      example: 'Surveillance Officer',
+      description: 'The role of the user in the surveillance system.',
+    },
+
     password: {
       required: true,
       type: 'string',
       maxLength: 200,
       example: 'passwordlol',
       description: 'The unencrypted password to use for the new account.'
-    }
+    },
+
+    admin1pcode: {
+      type: 'string',
+      description: 'Region Name',
+      example: 'Somali'
+    },
+
+    admin1name: {
+      type: 'string',
+      description: 'Region Pcode',
+      example: 'ET05'
+    },
+
+    admin2pcode: {
+      type: 'string',
+      description: 'Zone Name',
+      example: 'Jaffar'
+    },
+
+    admin2name: {
+      type: 'string',
+      description: 'Zone Pcode',
+      example: 'ET0503'
+    },
+
+    admin3pcode: {
+      type: 'string',
+      description: 'Woreda Name',
+      example: 'Ararso'
+    },
+
+    admin3name: {
+      type: 'string',
+      description: 'Woreda Pcode',
+      example: 'ET050395'
+    },
 
   },
 
@@ -83,7 +126,14 @@ the account verification message.)`,
       fullName: inputs.fullName,
       emailAddress: newEmailAddress,
       phoneNumber: inputs.phoneNumber,
+      position: inputs.position,
       password: await sails.helpers.passwords.hashPassword(inputs.password),
+      admin1pcode: inputs.admin1pcode,
+      admin1name: inputs.admin1name,
+      admin2pcode: inputs.admin2pcode,
+      admin2name: inputs.admin2name,
+      admin3pcode: inputs.admin3pcode,
+      admin3name: inputs.admin3name,
       tosAcceptedByIp: this.req.ip
     }, sails.config.custom.verifyEmailAddresses? {
       emailProofToken: await sails.helpers.strings.random('url-friendly'),
