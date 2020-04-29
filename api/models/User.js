@@ -158,11 +158,11 @@ email status until they click the link in the confirmation email.`
     /* EXTEND BASE MODEL */
     // extend default seed profile for requirements of ephiPulse
 
-    validated: {
-      type: 'boolean',
-      description: 'On registartion, a user must first be validated by ADMIN to view data & start reporting',
-      defaultsTo: false
-    },
+    // validated: {
+    //   type: 'boolean',
+    //   description: 'On registartion, a user must first be validated by ADMIN to view data & start reporting',
+    //   defaultsTo: false
+    // },
 
     phoneNumber: {
       type: 'string',
