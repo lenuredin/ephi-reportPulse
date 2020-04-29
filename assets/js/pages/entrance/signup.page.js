@@ -32,7 +32,7 @@ parasails.registerPage('signup', {
   mounted: function() {
     this.$focus('[autofocus]');
     // select 1st values
-    $('select').val($('select option:first').val());
+    // $('select').val($('select option:first').val());
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -53,6 +53,12 @@ parasails.registerPage('signup', {
         this.syncing = true;
         window.location = '/';
       }
+    },
+
+    // position updated
+    positionChange: function() {
+      // force state refresh
+      this.$forceUpdate();
     },
 
     // filter admin lists on select
@@ -91,21 +97,6 @@ parasails.registerPage('signup', {
         });
       }
 
-      // set select display admin2
-      // if ( !this.formData.admin2pcode ) {
-      //   console.log('admin2 empty');
-      //   console.log('Select ' + this.admin2List[0].admin2type_name + '...');
-      //   $('#admin2pcode').val('Select ' + this.admin2List[0].admin2type_name + '...');
-      //   // $('#admin2pcode').prop('selectedIndex', 0);
-      // }
-
-      // // set select display admin3
-      // if ( !this.formData.admin3pcode ) {
-      //   console.log('admin3 empty');
-      //   $('#admin3pcode').val('Select ' + this.admin3List[0].admin3type_name + '...');
-      //   // $('#admin3pcode').prop('selectedIndex', 0);
-      // }
-
       // force state refresh
       this.$forceUpdate();
     },
@@ -134,9 +125,9 @@ parasails.registerPage('signup', {
       }
 
       // Validate position:
-      // if(!argins.position) {
-      //   this.formErrors.position = true;
-      // }
+      if(!argins.position) {
+        this.formErrors.position = true;
+      }
 
       // Validate password:
       if(!argins.password) {
@@ -171,11 +162,6 @@ parasails.registerPage('signup', {
         });
         argins.admin3name = admin3.admin3name;
       }
-
-      // Validate ToS agreement:
-      // if(!argins.agreed) {
-      //   this.formErrors.agreed = true;
-      // }
 
       // If there were any issues, they've already now been communicated to the user,
       // so simply return undefined.  (This signifies that the submission should be

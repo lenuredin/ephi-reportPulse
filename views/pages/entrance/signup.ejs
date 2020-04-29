@@ -2,38 +2,82 @@
   <div class="container" v-if="!cloudSuccess">
     <h1 class="text-center">Create an account</h1>
     <div class="signup-form">
-      <p class="text-center">Let's get started! After registration, your account will be reviewed by PHEM administrators to enable access.</p>
+      <p class="text-center">After registration, your account will be reviewed by PHEM administrators to enable access.</p>
       <hr/>
       <!-- details -->
       <ajax-form action="signup" :syncing.sync="syncing" :cloud-error.sync="cloudError" @submitted="submittedForm()" :handle-parsing="handleParsingForm">
+        <h5 class="text-center">Details</h5>
+        <hr/>
         <div class="form-group">
           <label for="full-name">Full name</label>
-          <input class="form-control" id="full-name" autofocus type="text"  :class="[formErrors.fullName ? 'is-invalid' : '']" v-model.trim="formData.fullName" placeholder="Sturgis P. Sturgeon">
+          <input class="form-control" id="full-name" autofocus type="text" :class="[formErrors.fullName ? 'is-invalid' : '']" v-model.trim="formData.fullName" placeholder="Sturgis P. Sturgeon">
           <div class="invalid-feedback" v-if="formErrors.fullName">Please enter your full name.</div>
         </div>
         <div class="form-group">
           <label for="email-address">Email address</label>
-          <input class="form-control" id="email-address" type="email"  :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model.trim="formData.emailAddress" placeholder="sturgeon@example.com">
+          <input class="form-control" id="email-address" type="email" :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model.trim="formData.emailAddress" placeholder="sturgeon@example.com">
           <div class="invalid-feedback" v-if="formErrors.emailAddress">Please enter a valid email address.</div>
         </div>
         <div class="form-group">
           <label for="phone-number">Phone number</label>
-          <input class="form-control" id="phone-number" type="string"  :class="[formErrors.phoneNumber ? 'is-invalid' : '']" v-model.trim="formData.phoneNumber" placeholder="+251112758622">
+          <input class="form-control" id="phone-number" type="string" :class="[formErrors.phoneNumber ? 'is-invalid' : '']" v-model.trim="formData.phoneNumber" placeholder="+251112758622">
           <div class="invalid-feedback" v-if="formErrors.phoneNumber">Please enter a valid phone number.</div>
         </div>
 
         <!-- position -->
         <div class="form-group">
           <label for="position">Position</label>
-          <select class="form-control" id="position" v-model.trim="formData.position">
+          <select class="form-control" id="position" v-model.trim="formData.position" :class="[formErrors.position ? 'is-invalid' : '']"  @change="positionChange()">
             <option value="undefined" disabled>Select Position...</option>
             <% _.each(positions, function(position) { %>
               <option value="<%= position %>"><%= position %></option>
             <% }); %>
           </select>
+          <div class="invalid-feedback" v-if="formErrors.position">Please enter your position.</div>
+        </div>
+
+        <!-- location -->
+        <div v-if="formData.position && formData.position !== 'Federal Surveillance Officer'">
+          <h5 class="text-center">Location</h5>
+          <hr v-if="formData.position"/>
+          <div class="form-group"
+                v-if="formData.position === 'Regional Surveillance Officer' ||
+                      formData.position === 'Zonal Surveillance Officer' ||
+                      formData.position === 'Woreda Surveillance Officer'">
+            <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
+            <select class="form-control" id="admin1pcode" v-model.trim="formData.admin1pcode" @change="adminChange('admin1')">
+              <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
+              <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
+                {{ d.admin1name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group"
+                v-if="formData.position === 'Zonal Surveillance Officer' ||
+                      formData.position === 'Woreda Surveillance Officer'">
+            <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
+            <select class="form-control" id="admin2pcode" v-model.trim="formData.admin2pcode" @change="adminChange('admin2')" :disabled="!formData.admin1pcode">
+              <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
+              <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
+                {{ d.admin2name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group"
+                v-if="formData.position === 'Woreda Surveillance Officer'">
+            <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
+            <select class="form-control" id="admin3pcode" v-model.trim="formData.admin3pcode" :disabled="!formData.admin2pcode">
+              <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
+              <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
+                {{ d.admin3name }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <!-- password -->
+        <h5 class="text-center">Password</h5>
+        <hr/>
         <div class="form-group">
           <label for="password">Choose a password</label>
           <input class="form-control" id="password" type="password"  :class="[formErrors.password ? 'is-invalid' : '']" v-model.trim="formData.password" placeholder="••••••••">
@@ -43,37 +87,6 @@
           <label for="confirm-password">Confirm password</label>
           <input class="form-control" id="confirm-password" type="password"  :class="[formErrors.confirmPassword ? 'is-invalid' : '']" v-model.trim="formData.confirmPassword" placeholder="••••••••">
           <div class="invalid-feedback" v-if="formErrors.confirmPassword">Your password and confirmation do not match.</div>
-        </div>
-        <p class="text-center">Location</p>
-        <hr/>
-
-        <!-- location -->
-        <div class="form-group">
-          <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
-          <select class="form-control" id="admin1pcode" v-model.trim="formData.admin1pcode" @change="adminChange('admin1')">
-            <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
-            <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
-              {{ d.admin1name }}
-            </option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
-          <select class="form-control" id="admin2pcode" v-model.trim="formData.admin2pcode" @change="adminChange('admin2')" :disabled="!formData.admin1pcode">
-            <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
-            <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
-              {{ d.admin2name }}
-            </option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
-          <select class="form-control" id="admin3pcode" v-model.trim="formData.admin3pcode" :disabled="!formData.admin2pcode">
-            <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
-            <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
-              {{ d.admin3name }}
-            </option>
-          </select>
         </div>
 
         <p class="text-danger" v-if="cloudError==='emailAlreadyInUse'"><small>It looks like there's already an account with your email address. If you forgot your password, you can recover it <a href="password/forgot">here</a>.</small></p>
