@@ -1,0 +1,65 @@
+<div id="user-list" v-cloak>
+
+  <!-- container / header -->
+  <div class="container">
+
+    <div class="page-header text-center">
+      <img alt="ephiPulse" src="/images/ephiPulse.png" style="width:80px;"/>
+      <h3>Welcome to ephiPulse</h3>
+    </div>
+    <p class="text-center">Report. Validate. Protect.</p>
+
+    <!-- users list -->
+    <h5>Users</h5>
+    <hr/>
+    <table class="table table-striped" id="user-list-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th class="d-none d-md-table-cell">Position</th>
+          <th class="d-none d-md-table-cell">Phone</th>
+          <th class="d-none d-md-table-cell">Email</th>
+          <th class="d-none d-md-table-cell">Location</th>
+          <th class="actions-column">Manage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in userList">
+          <td><strong>{{user.fullName}}</strong></td>
+          <td class="d-none d-md-table-cell">{{user.position}}</td>
+          <td class="d-none d-md-table-cell">{{user.phoneNumber}}</td>
+          <td class="d-none d-md-table-cell">{{user.emailAddress}}</td>
+          <td class="d-none d-md-table-cell">{{user.admin1name}} {{user.admin2name}}, {{user.admin3name}}</td>
+          <td class="actions-column">
+            <button class="btn btn-sm btn-outline-info" href="/home">View User</button>
+            <button class="btn btn-sm btn-outline-danger" @click="clickRemoveUser(user.id)">Remove User</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <% /* "Remove user" modal */ %>
+  <modal v-if="confirmRemoveUserModalOpen && selectedUser" v-cloak key="remove" @close="closeRemoveUserModal()">
+    <div class="modal-header">
+      <h5 class="modal-title">Remove {{selectedUser.fullName}}?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="removeUser" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingRemoveUserForm" @submitted="submittedRemoveUserForm($event)">
+      <div class="modal-body">
+        <p>Are you sure you want to remove {{selectedUser.fullName}} from your users?</p>
+        <p>You will no longer be able to borrow items from this person.</p>
+        <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Nevermind</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-danger ml-1">Remove User</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

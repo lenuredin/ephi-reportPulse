@@ -174,7 +174,8 @@ email status until they click the link in the confirmation email.`
     position: {
       type: 'string',
       description: 'Position of user',
-      example: 'Surveillance Officer'
+      example: 'Surveillance Officer',
+      defaultsTo: 'Federal Surveillance Officer'
     },
 
     // admin0
@@ -198,12 +199,14 @@ email status until they click the link in the confirmation email.`
     admin1pcode: {
       type: 'string',
       description: 'Region Name',
-      example: 'Somali'
+      example: 'Somali',
+      defaultsTo: 'all'
     },
     admin1name: {
       type: 'string',
       description: 'Region Pcode',
-      example: 'ET05'
+      example: 'ET05',
+      defaultsTo: 'All'
     },
     admin1administrator: {
       type: 'boolean',
@@ -215,12 +218,14 @@ email status until they click the link in the confirmation email.`
     admin2pcode: {
       type: 'string',
       description: 'Zone Name',
-      example: 'Jaffar'
+      example: 'Jaffar',
+      defaultsTo: 'all'
     },
     admin2name: {
       type: 'string',
       description: 'Zone Pcode',
-      example: 'ET0503'
+      example: 'ET0503',
+      defaultsTo: 'All'
     },
     admin2administrator: {
       type: 'boolean',
@@ -232,12 +237,14 @@ email status until they click the link in the confirmation email.`
     admin3pcode: {
       type: 'string',
       description: 'Woreda Name',
-      example: 'Ararso'
+      example: 'Ararso',
+      defaultsTo: 'all'
     },
     admin3name: {
       type: 'string',
       description: 'Woreda Pcode',
-      example: 'ET050395'
+      example: 'ET050395',
+      defaultsTo: 'All'
     },
     admin3administrator: {
       type: 'boolean',

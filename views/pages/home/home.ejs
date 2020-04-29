@@ -1,0 +1,36 @@
+<div id="home" v-cloak>
+
+  <!-- container / header -->
+  <div class="container">
+
+    <div class="page-header text-center">
+      <img alt="ephiPulse" src="/images/ephiPulse.png" style="width:80px;"/>
+      <h3>Welcome to ephiPulse</h3>
+    </div>
+    <p class="text-center">Report. Validate. Protect.</p>
+
+    <div class="card-deck">
+      <!-- users -->
+      <div class="card text-white bg-info mb-3">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+          <h5 class="card-title">Users</h5>
+          <p class="card-text">Go to USERS of ephiPulse to access contact details.</p>
+          <a href="/users" class="btn btn-primary">Go To Users</a>
+        </div>
+      </div>
+      <!-- forms -->
+      <div class="card text-white bg-secondary mb-3">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+          <h5 class="card-title">Forms</h5>
+          <p class="card-text">Go to FORMS of ephiPulse to report & validate.</p>
+          <a href="/forms" class="btn btn-primary">Go To Forms</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

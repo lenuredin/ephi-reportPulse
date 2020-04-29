@@ -57,6 +57,17 @@ parasails.registerPage('signup', {
 
     // position updated
     positionChange: function() {
+      // clear admin1
+      delete this.formData.admin1pcode;
+      delete this.formData.admin1name;
+      // clear admin2
+      delete this.formData.admin2pcode;
+      delete this.formData.admin2name;
+      this.admin2ListFilter = [];
+      // clear admin3
+      delete this.formData.admin3pcode;
+      delete this.formData.admin3name;
+      this.admin3ListFilter = [];
       // force state refresh
       this.$forceUpdate();
     },

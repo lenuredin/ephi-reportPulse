@@ -26,14 +26,15 @@ module.exports = {
   fn: async function ({}) {
 
     if (this.req.me) {
-      // If this user has no friends, go to the page for sending friend requests.
-      if(this.req.me.friends.length === 0) {
-        throw {redirect:'/friends'};
-      }
-      // Otherwise, land on the 'things' page.
-      else {
-        throw {redirect:'/things'};
-      }
+      throw {redirect:'/home'};
+      // // If this user has no friends, go to the page for sending friend requests.
+      // if(this.req.me.friends.length === 0) {
+      //   throw {redirect:'/friends'};
+      // }
+      // // Otherwise, land on the 'things' page.
+      // else {
+      //   throw {redirect:'/things'};
+      // }
     }
 
   }

@@ -15,12 +15,15 @@ module.exports.routes = {
   //  ║║║║╣ ╠╩╗╠═╝╠═╣║ ╦║╣ ╚═╗
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
   'GET /':                   { action: 'view-homepage-or-redirect' },
-  'GET /friends/:virtualPageSlug?':   { action: 'friends/view-friends' },
-  'GET /things/:virtualPageSlug?':     { action: 'things/view-available-things' },
+  'GET /home':               { action: 'home/view-home' },
+  'GET /users':              { action: 'users/view-user-list' },
 
-  'GET /faq':                { view:   'pages/faq' },
-  'GET /legal/terms':        { view:   'pages/legal/terms' },
-  'GET /legal/privacy':      { view:   'pages/legal/privacy' },
+  // 'GET /friends/:virtualPageSlug?':   { action: 'friends/view-friends' },
+  // 'GET /things/:virtualPageSlug?':     { action: 'things/view-available-things' },
+
+  // 'GET /faq':                { view:   'pages/faq' },
+  // 'GET /legal/terms':        { view:   'pages/legal/terms' },
+  // 'GET /legal/privacy':      { view:   'pages/legal/privacy' },
   'GET /contact':            { view:   'pages/contact', locals: { currentSection: 'contact' }},
 
   'GET /signup':             { action: 'entrance/view-signup' },
