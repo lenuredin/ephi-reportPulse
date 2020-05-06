@@ -65,9 +65,7 @@ module.exports = {
       positions: positions,
       admin1List: admin1,
       admin2List: admin2,
-      admin2ListFilter: admin2,
-      admin3List: admin3,
-      admin3ListFilter: admin3,
+      admin3List: admin3
     };
 
   }

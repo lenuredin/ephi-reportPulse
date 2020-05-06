@@ -17,6 +17,10 @@ module.exports.routes = {
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /home':               { action: 'home/view-home' },
   'GET /users':              { action: 'users/view-user-list' },
+  'GET /forms':              { action: 'forms/view-forms' },
+  'GET /forms/list/:id':     { action: 'forms/view-forms-list' },
+  // delete
+  'DELETE /api/v1/forms/remove-record': { action: 'forms/remove-record' },
 
   // 'GET /friends/:virtualPageSlug?':   { action: 'friends/view-friends' },
   // 'GET /things/:virtualPageSlug?':     { action: 'things/view-available-things' },

@@ -1,0 +1,26 @@
+<div id="forms" v-cloak>
+
+  <!-- container / header -->
+  <div class="container">
+
+    <div class="page-header text-center">
+      <h3>Forms</h3>
+    </div>
+    <p class="text-center">Report. Validate. Protect.</p>
+
+    <div class="card-deck">
+      <!-- users -->
+      <div v-for="form in forms" class="card text-white bg-info mb-2">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+          <h5 class="card-title">{{ form.form_name }}</h5>
+          <p class="card-text">Go to records of {{ form.form_name }}.</p>
+          <a :href="'/forms/list/' + form.id" class="btn btn-primary">Go To Records</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

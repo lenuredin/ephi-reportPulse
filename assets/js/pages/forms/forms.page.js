@@ -1,10 +1,9 @@
-parasails.registerPage('user-list', {
+parasails.registerPage('forms', {
   //  ╦╔╗╔╦╔╦╗╦╔═╗╦    ╔═╗╔╦╗╔═╗╔╦╗╔═╗
   //  ║║║║║ ║ ║╠═╣║    ╚═╗ ║ ╠═╣ ║ ║╣
   //  ╩╝╚╝╩ ╩ ╩╩ ╩╩═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝
   data: {
-    selectedUser: false,
-    confirmRemoveUserModalOpen: false
+    //…
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -16,19 +15,12 @@ parasails.registerPage('user-list', {
   },
   mounted: async function() {
     //…
-    $('#user-list-table').DataTable();
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
   //  ║║║║ ║ ║╣ ╠╦╝╠═╣║   ║ ║║ ║║║║╚═╗
   //  ╩╝╚╝ ╩ ╚═╝╩╚═╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
   methods: {
-    // prompt remove user
-    clickRemoveUser: function(userId) {
-      this.selectedUser = _.find(this.userList, {id: userId});
-      // Open the modal.
-      this.confirmRemoveUserModalOpen = true;
-    }
-
+    //…
   }
 });

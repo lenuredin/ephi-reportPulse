@@ -1,0 +1,119 @@
+<div id="forms-list" v-cloak>
+
+  <!-- container / header -->
+  <div class="container">
+
+    <!-- header -->
+    <div class="page-header text-center">
+      <h3>{{form.form_name}}</h3>
+    </div>
+    <p class="text-center">Report. Validate. Protect.</p>
+
+    <!-- add record -->
+    <div class="header-buttons text-center">
+      <button class="btn btn-outline-primary" @click="clickAddButton()">Add Record</button>
+    </div>
+
+    <!-- alert -->
+    <div class="alert alert-success" role="alert">
+      Record successfully removed!
+    </div>
+
+    <!-- if records, show list -->
+    <div v-if="!records.length" class="text-center">
+      <p>No records found.</p>
+    </div>
+
+    <!-- if records, show list -->
+    <div v-if="records.length" style="padding-top:20px;">
+      <!-- records list -->
+      <div style="padding-bottom:20px;">
+        <div class="card sm-12">
+          <div class="card-header">
+            <!-- <h5>Pending Validation</h5> -->
+            <h5>{{form.form_name}} Records</h5>
+          </div>
+          <div cass="card-body" style="padding:20px;">
+
+            <!-- ODK form partials to display table -->
+            <!-- for each new form, a new partial is reeuired -->
+            <%- include('partials/tables/'+ form.form_name + '-table') %>
+
+          </div>
+        </div>
+      </div>
+      <!-- records list -->
+      <div v-if="false" class="card sm-12">
+        <div class="card-header">
+          <h5>Validated</h5>
+        </div>
+        <div cass="card-body" style="padding:20px;">
+
+          <!-- ODK form partials to display table -->
+          <!-- for each new form, a new partial is reeuired -->
+          <%- include('partials/tables/'+ form.form_name + '-table') %>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <% /* "View / Update record" modal */ %>
+  <modal v-if="editViewRecordModalOpen && selectedRecord" v-cloak key="update" @close="closeModalOpen()">
+    <div class="modal-header">
+      <h5 class="modal-title">{{ form.form_name }}: {{ selectedRecord.id }}</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="updateRecord"
+                :syncing.sync="syncing"
+                :cloud-error.sync="cloudError"
+                :handle-parsing="handleParsingUpdateRecordForm"
+                @submitted="submittedUpdateRecordForm()">
+      <div class="modal-body">
+
+        <h5> View / Edit </h5>
+
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Cancel</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-primary ml-1">Update</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
+
+
+  <% /* "Delete record" modal */ %>
+  <modal v-if="confirmRemoveRecordModalOpen && selectedRecord" v-cloak key="delete" @close="closeModalOpen()">
+    <div class="modal-header">
+      <h5 class="modal-title">Remove Record?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="removeRecord"
+                :syncing.sync="syncing"
+                :cloud-error.sync="cloudError"
+                :handle-parsing="handleParsingDeleteRecordForm"
+                @submitted="submittedDeleteRecordForm()">
+      <div class="modal-body">
+        <h5>Warning!</h5>
+        <p>This action cannot be undone! Are you sure you want to remove this record?</p>
+
+        <!-- ODK form specific detail message -->
+        <!-- for each new form, a new partial is reeuired -->
+        <%- include('partials/modals/remove/'+ form.form_name + '-remove') %>
+
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Cancel</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-danger ml-1">Yes, Remove</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
