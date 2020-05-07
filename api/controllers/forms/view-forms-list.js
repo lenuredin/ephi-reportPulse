@@ -91,6 +91,14 @@ var FormsList = {
     .meta({ schemaName: 'admin' })
     .sort('admin3name ASC');
 
+    // health_facilities
+    var adminsites = await eth_adminsites.find({
+      where: {},
+      select: [ 'admin1pcode', 'admin1name', 'admin1type_name', 'admin2pcode', 'admin2name', 'admin2type_name', 'admin3pcode', 'admin3name', 'admin3type_name', 'site_id', 'site_name' ]
+    })
+    .meta({ schemaName: 'admin' })
+    .sort('site_name ASC');
+
 
     // merge admin3 keys to records
     var records = [];
@@ -118,9 +126,8 @@ var FormsList = {
       records: records,
       admin1List: admin1,
       admin2List: admin2,
-      admin2ListFilter: admin2,
       admin3List: admin3,
-      admin3ListFilter: admin3
+      adminsitesList: adminsites
     };
 
   }

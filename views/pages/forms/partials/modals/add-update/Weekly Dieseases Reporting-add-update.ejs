@@ -1,0 +1,84 @@
+<!-- location -->
+<div>
+  <!-- location -->
+  <h5 class="text-center">Location</h5>
+  <hr/>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
+      <select class="form-control" id="admin1pcode" v-model.trim="selectedRecord.admin1pcode" @change="adminChange('admin1')">
+        <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
+        <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
+          {{ d.admin1name }}
+        </option>
+      </select>
+    </div>
+    <div class="form-group col-md-4">
+      <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
+      <select class="form-control" id="admin2pcode" v-model.trim="selectedRecord.admin2pcode" @change="adminChange('admin2')" :disabled="!selectedRecord.admin1pcode">
+        <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
+        <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
+          {{ d.admin2name }}
+        </option>
+      </select>
+    </div>
+    <div class="form-group col-md-4">
+      <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
+      <select class="form-control" id="admin3pcode" v-model.trim="selectedRecord.admin3pcode" :disabled="!selectedRecord.admin2pcode">
+        <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
+        <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
+          {{ d.admin3name }}
+        </option>
+      </select>
+    </div>
+<!--     <div class="form-group col-md-3">
+      <label for="site_id">Health Facilities</label>
+      <select class="form-control" id="site_id" v-model.trim="selectedRecord.site_id" :disabled="!selectedRecord.admin3pcode">
+        <option value="undefined" disabled>Select Health Facility...</option>
+        <option v-for="d in adminsitesListFilter" v-bind:value="d.site_id">
+          {{ d.site_name }}
+        </option>
+      </select>
+    </div> -->
+  </div>
+  <!-- location -->
+  <h5 class="text-center">Details</h5>
+  <hr/>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+
+    </div>
+    <div class="form-group col-md-8">
+      <label for="diseaseCondition">Disease Condition</label>
+      <select class="form-control" id="diseaseCondition" v-model.trim="selectedRecord.diseaseCondition">
+        <option value="undefined" disabled>Select Disease...</option>
+        <option v-for="d in choices.diseases" v-bind:value="d.name">
+          {{ d.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+
+  <!-- patient type -->
+    <!-- In Patient -->
+    <!-- Out Patient -->
+  <!-- name -->
+  <!-- Kebele/PA's Town, House No. -->
+  <!-- Gender -->
+  <!-- Age -->
+  <!-- date seen at health facility, EC -->
+  <!-- date of onset of disease, EC -->
+
+  <!-- Lab Tests -->
+  <!-- specimen taken (yes/no) -->
+  <!-- specimen taken date -->
+  <!-- Lab results -->
+
+  <!-- outcome -->
+    <!-- live, dead -->
+
+  <!-- comments -->
+
+
+</div>

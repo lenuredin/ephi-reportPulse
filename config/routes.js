@@ -21,6 +21,7 @@ module.exports.routes = {
   'GET /forms/list/:id':     { action: 'forms/view-forms-list' },
   // delete
   'DELETE /api/v1/forms/remove-record': { action: 'forms/remove-record' },
+  'PUT /api/v1/forms/add-update-record': { action: 'forms/add-update-record' },
 
   // 'GET /friends/:virtualPageSlug?':   { action: 'friends/view-friends' },
   // 'GET /things/:virtualPageSlug?':     { action: 'things/view-available-things' },

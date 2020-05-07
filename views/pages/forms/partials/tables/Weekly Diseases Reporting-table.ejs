@@ -1,17 +1,26 @@
-<table class="table table-striped" id="record-list-pending-validation-table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th class="actions-column">Manage</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="d in records">
-      <td><strong>{{d.id}}</strong></td>
-      <td class="actions-column">
-        <button class="btn btn-sm btn-outline-info" :href="'/forms/record/' + d.id ">View Record</button>
-        <button class="btn btn-sm btn-outline-danger" @click="clickRemoveRecord(d.id)">Remove Record</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<thead>
+  <tr>
+    <th>ID</th>
+    <th class="actions-column">Manage</th>
+  </tr>
+</thead>
+<tbody>
+  <tr v-for="d in records">
+    <td><strong>{{ d.id }}</strong></td>
+    <!-- buttons -->
+    <td class="actions-column" align="horizontal">
+      <div class="row">
+        <div class="col-6" align="right">
+          <button type="button" title="View Record" class="btn btn-labeled btn-outline-primary" @click="clickUpdateRecord(d.id)">
+            <span class="btn-label"><i class="fa fa-eye"></i></span>
+          </button>
+        </div>
+        <div class="col-6" align="left">
+          <button type="button" title="Remove Record" class="btn btn-labeled btn-outline-danger" @click="clickRemoveRecord(d.id)">
+            <span class="btn-label"><i class="fa fa-trash"></i></span>
+          </button>
+        </div>
+      </div>
+    </td>
+  </tr>
+</tbody>

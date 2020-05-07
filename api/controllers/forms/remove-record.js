@@ -3,19 +3,19 @@ var RemoveRecord = {
   friendlyName: 'Remove record',
 
 
-  description: '',
+  description: 'Removes a record from the ODK Form database',
 
   inputs: {
 
     form_name: {
-      description: 'The id of the form.',
+      description: 'The name of the form.',
       type: 'string',
       required: true
     },
 
     record: {
-      description: 'The records object to be deleted.',
-      type: 'ref',
+      description: 'The record object to be deleted.',
+      type: 'json',
       required: true
     },
   },

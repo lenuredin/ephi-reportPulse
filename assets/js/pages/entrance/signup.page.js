@@ -28,11 +28,13 @@ parasails.registerPage('signup', {
   beforeMount: function() {
     // Attach any initial data from the server.
     _.extend(this, SAILS_LOCALS);
+    // set admin for forms
+    this.admin2ListFilter = this.admin2List;
+    this.admin3ListFilter = this.admin3List;
   },
   mounted: function() {
+    // autofocus on first input
     this.$focus('[autofocus]');
-    // select 1st values
-    // $('select').val($('select option:first').val());
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗

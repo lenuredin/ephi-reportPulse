@@ -10,13 +10,13 @@
     <p class="text-center">Report. Validate. Protect.</p>
 
     <!-- add record -->
-    <div class="header-buttons text-center">
+    <div class="header-buttons text-center" style="padding-bottom: 10px;">
       <button class="btn btn-outline-primary" @click="clickAddButton()">Add Record</button>
     </div>
 
     <!-- alert -->
     <div class="alert alert-success" role="alert">
-      Record successfully removed!
+      Record Successfully {{ formSaveLabel }}d!
     </div>
 
     <!-- if records, show list -->
@@ -31,13 +31,15 @@
         <div class="card sm-12">
           <div class="card-header">
             <!-- <h5>Pending Validation</h5> -->
-            <h5>{{form.form_name}} Records</h5>
+            <h5>Pending Validation</h5>
           </div>
           <div cass="card-body" style="padding:20px;">
 
             <!-- ODK form partials to display table -->
             <!-- for each new form, a new partial is reeuired -->
-            <%- include('partials/tables/'+ form.form_name + '-table') %>
+            <table class="table table-striped" id="record-list-pending-validation-table">
+              <%- include('partials/tables/'+ form.form_name + '-table') %>
+            </table>
 
           </div>
         </div>
@@ -63,24 +65,28 @@
   <% /* "View / Update record" modal */ %>
   <modal v-if="editViewRecordModalOpen && selectedRecord" v-cloak key="update" @close="closeModalOpen()">
     <div class="modal-header">
-      <h5 class="modal-title">{{ form.form_name }}: {{ selectedRecord.id }}</h5>
+      <h5 class="modal-title">{{ form.form_name }}</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span>&times;</span>
       </button>
     </div>
-    <ajax-form action="updateRecord"
+    <ajax-form action="addUpdateRecord"
                 :syncing.sync="syncing"
                 :cloud-error.sync="cloudError"
-                :handle-parsing="handleParsingUpdateRecordForm"
-                @submitted="submittedUpdateRecordForm()">
+                :handle-parsing="handleParsingAddUpdateRecordForm"
+                @submitted="submittedAddUpdateRecordForm()">
       <div class="modal-body">
 
-        <h5> View / Edit </h5>
+        <!-- ODK form specific detail message -->
+        <!-- for each new form, a new partial is reeuired -->
+        <table class="table table-striped" id="record-list-validated-table">
+          <%- include('partials/modals/add-update/'+ form.form_name + '-add-update') %>
+        </table>
 
       </div>
       <div class="modal-footer">
         <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Cancel</button>
-        <ajax-button type="submit" :syncing="syncing" class="btn btn-primary ml-1">Update</ajax-button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-primary ml-1">{{ formSaveLabel }}</ajax-button>
       </div>
     </ajax-form>
   </modal>
