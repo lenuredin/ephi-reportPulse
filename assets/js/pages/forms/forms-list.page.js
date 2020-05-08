@@ -8,8 +8,14 @@ parasails.registerPage('forms-list', {
     syncing: false,
 
     // For tracking client-side validation errors in our form.
-    // > Has property set to `true` for each invalid property in `todo`.
-    formErrors: { /* … */ },
+    // UI errors to user are managed on the form
+    // default and mandatory form fields from 'utilities/xls-form-validation.js' are
+      // checked in handleParsingAddUpdateRecordForm js function before sending to server
+    // for each new form, required fields must be updaetd here
+    formErrors: false,
+    // highlight form errors after formSubmitAttempt
+    formSubmitAttempt: false,
+
 
     // Server error state for the form
     cloudError: '',
@@ -111,10 +117,15 @@ parasails.registerPage('forms-list', {
         });
       }
 
+      // force state refresh
+     this.forceUpdate();
 
+    },
+
+    // force refresh
+    forceUpdate: function() {
       // force state refresh
       this.$forceUpdate();
-
     },
 
     // add new record
@@ -147,53 +158,94 @@ parasails.registerPage('forms-list', {
 
     // handle parsing update
     handleParsingAddUpdateRecordForm: function(){
+
+      // form submit attempt under way
+      this.formErrors = false;
+      this.formSubmitAttempt = true;
+
       // if a new entry, set init sailsjs values required in model
       if ( this.formSaveLabel === 'Save' ) {
         // set uuid
         this.selectedRecord.id = 'uuid:' + this.uuididv4();
-        var argins = this.selectedRecord;
-        // Set admin1name
-        if (argins.admin1pcode) {
-          var admin1 = _.find(this.admin1List, function(item) {
-            return argins.admin1pcode === item.admin1pcode;
-          });
-          this.selectedRecord.admin1name = admin1.admin1name;
-        }
-        // Set admin2name
-        if (argins.admin2pcode) {
-          var admin2 = _.find(this.admin2List, function(item) {
-            return argins.admin2pcode === item.admin2pcode;
-          });
-          this.selectedRecord.admin2name = admin2.admin2name;
-        }
-        // Set admin3name
-        if (argins.admin3pcode) {
-          var admin3 = _.find(this.admin3List, function(item) {
-            return argins.admin3pcode === item.admin3pcode;
-          });
-          this.selectedRecord.admin3name = admin3.admin3name;
-        }
         //user, createdAt, updatedAt
         this.selectedRecord.creatorUser = this.me.emailAddress;
         this.selectedRecord.createdAt = new Date();
         this.selectedRecord.updatedAt = new Date();
       }
-      // send to server for processing
-      return {
-        form_name: this.form.form_name,
-        record: this.selectedRecord
+
+      // set admin
+      var argins = this.selectedRecord;
+      // Set admin1name
+      if (argins.admin1pcode) {
+        var admin1 = _.find(this.admin1List, function(item) {
+          return argins.admin1pcode === item.admin1pcode;
+        });
+        this.selectedRecord.admin1name = admin1.admin1name;
       }
+      // Set admin2name
+      if (argins.admin2pcode) {
+        var admin2 = _.find(this.admin2List, function(item) {
+          return argins.admin2pcode === item.admin2pcode;
+        });
+        this.selectedRecord.admin2name = admin2.admin2name;
+      }
+      // Set admin3name
+      if (argins.admin3pcode) {
+        var admin3 = _.find(this.admin3List, function(item) {
+          return argins.admin3pcode === item.admin3pcode;
+        });
+        this.selectedRecord.admin3name = admin3.admin3name;
+      }
+      // Set site
+      if (argins.site_id) {
+        var site = _.find(this.adminsitesList, function(item) {
+          return argins.site_id === item.site_id;
+        });
+        this.selectedRecord.site_name = site.site_name;
+      }
+
+      // run default valudation for javscript
+      // form manages UI error updates to user
+      var _this = this;
+      var xlsFormValidation = parasails.require('xlsFormValidation');
+
+      // for default fields (across all forms)
+      xlsFormValidation('default').forEach(function(field){
+        if(!_this.selectedRecord[field]){
+          _this.formErrors = true;
+        }
+      });
+      // for form specific fields
+      xlsFormValidation(this.form.form_name).forEach(function(field){
+        if(!_this.selectedRecord[field]){
+          _this.formErrors = true;
+        }
+      });
+
+      // if form errors, do not send to server, return undefined
+      if (this.formErrors){
+        return;
+      }
+
+      // if no errors, send to server for processing
+      if (!this.formErrors){
+        return {
+          form_name: this.form.form_name,
+          record: this.selectedRecord
+        }
+      }
+
     },
 
     // handle submission
     submittedAddUpdateRecordForm: function(){
+      // reset form errors
+      this.formSubmitAttempt = false;
       // Show the success message.
       this.cloudSuccess = true;
       if ( this.formSaveLabel === 'Save' ) {
         this.selectedRecord.id =
         this.records.push(this.selectedRecord);
-        // force state refresh
-        // this.$forceUpdate();
       }
       // alert
       $('.alert').fadeTo(6000, 500).slideUp(500, function() {
@@ -242,6 +294,9 @@ parasails.registerPage('forms-list', {
 
     // close modal
     closeModalOpen: function(){
+      // reset
+      this.formErrors = false;
+      this.formSubmitAttempt = false;
       this.selectedRecord = undefined;
       this.editViewRecordModalOpen = false;
       this.confirmRemoveRecordModalOpen = false;

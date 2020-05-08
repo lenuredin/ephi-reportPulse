@@ -126,6 +126,10 @@ module.exports = {
       type: 'string',
       columnName: 'OUTCOME'
     },
+    comments:{
+      type: 'string',
+      columnName: 'COMMENTS'
+    },
     admin1pcode: {
       type: 'string',
       columnName: 'ADMIN1PCODE'

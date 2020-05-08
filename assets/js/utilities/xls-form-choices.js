@@ -44,6 +44,22 @@ parasails.registerUtility('xlsFormChoices', function xlsFormChoices(formName) {
         { name:'Severe_Malnutrition', label: 'Severe Malnutrition' },
         { name:'Typhoid_Fever', label: 'Typhoid Fever' },
         { name:'Typhus', label: 'Typhus' }
+      ],
+      patientTypes:[
+        { name:'In_Patient', label: 'In Patient' },
+        { name:'Out_Patient', label: 'Out Patient' }
+      ],
+      genders:[
+        { name:'Male', label: 'Male' },
+        { name:'Female', label: 'Female' }
+      ],
+      yesNo:[
+        { name:'yes', label: 'yes' },
+        { name:'no', label: 'no' }
+      ],
+      outcomes:[
+        { name:'Live', label: 'Live' },
+        { name:'Dead', label: 'Dead' }
       ]
     }
   }

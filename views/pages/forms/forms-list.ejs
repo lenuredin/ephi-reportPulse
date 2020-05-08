@@ -77,6 +77,54 @@
                 @submitted="submittedAddUpdateRecordForm()">
       <div class="modal-body">
 
+        <!-- ODK form defaults (location) -->
+        <!-- for each new form, location is required -->
+
+        <!-- location -->
+        <h5 class="text-center">Location</h5>
+        <hr/>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
+            <select class="form-control" id="admin1pcode" v-model.trim="selectedRecord.admin1pcode" :class="[formSubmitAttempt && !selectedRecord.admin1pcode ? 'is-invalid' : '']" @change="adminChange('admin1')">
+              <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
+              <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
+                {{ d.admin1name }}
+              </option>
+            </select>
+            <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.admin2pcode">Please enter {{ admin1List[ 0 ].admin1type_name }}.</div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
+            <select class="form-control" id="admin2pcode" v-model.trim="selectedRecord.admin2pcode"  :class="[formSubmitAttempt && !selectedRecord.admin2pcode ? 'is-invalid' : '']" @change="adminChange('admin2')" :disabled="!selectedRecord.admin1pcode">
+              <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
+              <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
+                {{ d.admin2name }}
+              </option>
+            </select>
+            <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.admin2pcode">Please enter {{ admin2List[ 0 ].admin2type_name }}.</div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
+            <select class="form-control" id="admin3pcode" v-model.trim="selectedRecord.admin3pcode"  :class="[formSubmitAttempt && !selectedRecord.admin3pcode ? 'is-invalid' : '']" @change="adminChange('admin3')" :disabled="!selectedRecord.admin2pcode">
+              <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
+              <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
+                {{ d.admin3name }}
+              </option>
+            </select>
+            <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.admin3pcode">Please enter {{ admin2List[ 0 ].admin3type_name }}.</div>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="site_id">Health Facilities</label>
+            <select class="form-control" id="site_id" v-model.trim="selectedRecord.site_id" :disabled="!selectedRecord.admin3pcode">
+              <option value="undefined" disabled>Select Health Facility...</option>
+              <option v-for="d in adminsitesListFilter" v-bind:value="d.site_id">
+                {{ d.site_name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
         <!-- ODK form specific detail message -->
         <!-- for each new form, a new partial is reeuired -->
         <table class="table table-striped" id="record-list-validated-table">

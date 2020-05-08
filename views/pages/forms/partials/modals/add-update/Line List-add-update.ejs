@@ -1,84 +1,108 @@
 <!-- location -->
 <div>
-  <!-- location -->
-  <h5 class="text-center">Location</h5>
-  <hr/>
-  <div class="form-row">
-    <div class="form-group col-md-3">
-      <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
-      <select class="form-control" id="admin1pcode" v-model.trim="selectedRecord.admin1pcode" @change="adminChange('admin1')">
-        <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
-        <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
-          {{ d.admin1name }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group col-md-3">
-      <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
-      <select class="form-control" id="admin2pcode" v-model.trim="selectedRecord.admin2pcode" @change="adminChange('admin2')" :disabled="!selectedRecord.admin1pcode">
-        <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
-        <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
-          {{ d.admin2name }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group col-md-3">
-      <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
-      <select class="form-control" id="admin3pcode" v-model.trim="selectedRecord.admin3pcode" @change="adminChange('admin3')" :disabled="!selectedRecord.admin2pcode">
-        <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
-        <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
-          {{ d.admin3name }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group col-md-3">
-      <label for="site_id">Health Facilities</label>
-      <select class="form-control" id="site_id" v-model.trim="selectedRecord.site_id" :disabled="!selectedRecord.admin3pcode">
-        <option value="undefined" disabled>Select Health Facility...</option>
-        <option v-for="d in adminsitesListFilter" v-bind:value="d.site_id">
-          {{ d.site_name }}
-        </option>
-      </select>
-    </div>
-  </div>
-  <!-- location -->
+  <!-- details -->
   <h5 class="text-center">Details</h5>
   <hr/>
   <div class="form-row">
     <div class="form-group col-md-4">
-
+      <input/> <!-- date recieved -->
     </div>
     <div class="form-group col-md-8">
       <label for="diseaseCondition">Disease Condition</label>
-      <select class="form-control" id="diseaseCondition" v-model.trim="selectedRecord.diseaseCondition">
+      <select class="form-control" id="diseaseCondition" v-model.trim="selectedRecord.diseaseCondition" :class="[formSubmitAttempt && !selectedRecord.diseaseCondition ? 'is-invalid' : '']" @change="forceUpdate()">
         <option value="undefined" disabled>Select Disease...</option>
         <option v-for="d in choices.diseases" v-bind:value="d.name">
           {{ d.label }}
         </option>
       </select>
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.diseaseCondition">Please enter Disease Condition.</div>
     </div>
   </div>
-
-
   <!-- patient type -->
-    <!-- In Patient -->
-    <!-- Out Patient -->
-  <!-- name -->
-  <!-- Kebele/PA's Town, House No. -->
-  <!-- Gender -->
-  <!-- Age -->
-  <!-- date seen at health facility, EC -->
-  <!-- date of onset of disease, EC -->
-
-  <!-- Lab Tests -->
-  <!-- specimen taken (yes/no) -->
-  <!-- specimen taken date -->
-  <!-- Lab results -->
-
-  <!-- outcome -->
-    <!-- live, dead -->
-
-  <!-- comments -->
-
-
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <input/> <!-- date of onset of disease, EC -->
+    </div>
+    <div class="form-group col-md-3">
+      <input/> <!-- date seen at health facility, EC -->
+    </div>
+    <div class="form-group col-md-6">
+      <label for="patientType">Patient Type</label>
+      <select class="form-control" id="patientType" v-model.trim="selectedRecord.patientType" :class="[formSubmitAttempt && !selectedRecord.patientType ? 'is-invalid' : '']" @change="forceUpdate()">
+        <option value="undefined" disabled>Select Patient Type...</option>
+        <option v-for="d in choices.patientTypes" v-bind:value="d.name">
+          {{ d.label }}
+        </option>
+      </select>
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.patientType">Please enter Patient Type.</div>
+    </div>
+  </div>
+  <!-- patient details -->
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="name">Patient Name</label>
+      <input class="form-control" id="name" type="text" :class="[formSubmitAttempt && !selectedRecord.name ? 'is-invalid' : '']" v-model.trim="selectedRecord.name" @change="forceUpdate()">
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.name">Please enter Patient Name.</div>
+    </div>
+    <div class="form-group col-md-4">
+      <label for="patientType">Gender</label>
+      <select class="form-control" id="gender" :class="[formSubmitAttempt && !selectedRecord.gender ? 'is-invalid' : '']" v-model.trim="selectedRecord.gender" @change="forceUpdate()">
+        <option value="undefined" disabled>Select Gender...</option>
+        <option v-for="d in choices.genders" v-bind:value="d.name">
+          {{ d.label }}
+        </option>
+      </select>
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.gender">Please enter Patient Gender.</div>
+    </div>
+    <div class="form-group col-md-4">
+      <label for="age">Age</label>
+      <input class="form-control" id="age" type="number" :class="[formSubmitAttempt && !selectedRecord.age ? 'is-invalid' : '']" v-model.trim="selectedRecord.age" @change="forceUpdate()">
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.age">Please enter Patient Age.</div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <label for="kebeleTownHouseNo">Kebele/PA's Town, House No.</label>
+      <input class="form-control" id="kebeleTownHouseNo" type="text" :class="[formSubmitAttempt && !selectedRecord.kebeleTownHouseNo ? 'is-invalid' : '']" v-model.trim="selectedRecord.kebeleTownHouseNo" @change="forceUpdate()">
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.kebeleTownHouseNo">Please enter patient Kebele/PA's Town, House No.</div>
+    </div>
+  </div>
+  <!-- location -->
+  <h5 class="text-center">Lab</h5>
+  <hr/>
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <label for="patientType">Specimen Taken</label>
+      <select class="form-control" id="specimenTaken" v-model.trim="selectedRecord.specimenTaken" :class="[formSubmitAttempt && !selectedRecord.specimenTaken ? 'is-invalid' : '']" @change="forceUpdate()">
+        <option value="undefined" disabled>Select Specimen Taken...</option>
+        <option v-for="d in choices.yesNo" v-bind:value="d.name">
+          {{ d.label }}
+        </option>
+      </select>
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.specimenTaken">Please enter Specimen Taken.</div>
+    </div>
+    <div v-if="selectedRecord.specimenTaken === 'yes'" class="form-group col-md-6">
+      <input/> <!-- date of onset of disease, EC -->
+    </div>
+    <div v-if="selectedRecord.specimenTaken === 'yes'" class="form-group col-md-6">
+      <label for="labResult">Lab Results</label>
+      <input class="form-control" id="labResult" type="text" v-model.trim="selectedRecord.labResult" @change="forceUpdate()">
+    </div>
+    <div class="form-group col-md-12">
+      <label for="outcome">Outcome</label>
+      <select class="form-control" id="outcome" v-model.trim="selectedRecord.outcome" :class="[formSubmitAttempt && !selectedRecord.outcome ? 'is-invalid' : '']" @change="forceUpdate()">
+        <option value="undefined" disabled>Select Outcome...</option>
+        <option v-for="d in choices.outcomes" v-bind:value="d.name">
+          {{ d.label }}
+        </option>
+      </select>
+      <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.outcome">Please enter Outcome.</div>
+    </div>
+  </div>
+  <!-- location -->
+  <h5 class="text-center">Comments</h5>
+  <hr/>
+  <div class="form-row">
+    <textarea class="form-control" id="comments" v-model.trim="selectedRecord.comments"></textarea>
+  </div>
 </div>
