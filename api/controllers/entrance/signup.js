@@ -187,18 +187,73 @@ the account verification message.)`,
     // Store the user's new id in their session.
     this.req.session.userId = newUserRecord.id;
 
+    // send notificaiton of new user account registrstion for full chain of reporting
     if (sails.config.custom.verifyEmailAddresses) {
-      // Send "confirm account" email
-      // await sails.helpers.sendTemplateEmail.with({
-      //   to: newEmailAddress,
-      //   subject: 'Please confirm your account',
-      //   template: 'email-verify-account',
-      //   templateData: {
-      //     fullName: inputs.fullName,
-      //     token: newUserRecord.emailProofToken
-      //   }
-      // });
-      sails.log.info('ToDo: Send email address');
+
+      // emails
+      var emails = '';
+      var fullName = false;
+      var moment = require('moment');
+
+      // woreda
+      if(inputs.admin3administrator) {
+        var zonalAdmins = await User.find({ admin2pcode: inputs.admin2pcode, admin2administrator: true });
+        zonalAdmins.forEach(function(d){
+          emails += d.email + ',';
+          if (!fullName) {
+            fullName = d.fullName;
+          }
+        });
+      }
+      // zonal
+      if(inputs.admin2administrator || inputs.admin3administrator) {
+        var regionalAdmins = await User.find({ admin1pcode: inputs.admin1pcode, admin1administrator: true });
+        regionalAdmins.forEach(function(d){
+          emails += d.email + ',';
+          if (!fullName) {
+            fullName = d.fullName;
+          }
+        });
+      }
+      // regional
+      if(inputs.admin1administrator || inputs.admin2administrator || inputs.admin3administrator) {
+        var federalAdmins = await User.find({ admin0administrator: true });
+        federalAdmins.forEach(function(d){
+          emails += d.email + ',';
+          if (!fullName) {
+            fullName = d.fullName;
+          }
+        });
+      }
+
+      // find super users by default
+      var superAdmins = await User.find({ isSuperAdmin: true });
+      superAdmins.forEach(function(d){
+        emails += d.email + ',';
+        if (!fullName) {
+          fullName = d.fullName;
+        }
+      });
+      // remove last comma
+      emails = emails.slice( 0, -1 );
+
+      console.log(emails);
+
+      // send email
+      sails.hooks.email.send( 'email-verify-account', {
+        fullName: fullName,
+        newUserRecord: newUserRecord,
+        token: newUserRecord.emailProofToken
+      },{
+        to: emails,
+        subject: 'Please confirm new account - ' + moment().format('LLL'),
+      }, function(err) {
+        // return
+        if ( err ) return 'error';
+        // return
+        return;
+      });
+
     } else {
       sails.log.info('Skipping new account email verification... (since `verifyEmailAddresses` is disabled)');
     }

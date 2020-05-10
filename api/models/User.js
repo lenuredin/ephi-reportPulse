@@ -84,34 +84,6 @@ a default payment source (i.e. credit card).  Note that a user have a \`stripeCu
 without necessarily having a billing card.`
     },
 
-    billingCardBrand: {
-      type: 'string',
-      example: 'Visa',
-      description: 'The brand of this user\'s default billing card (or empty string if no billing card is set up).',
-      extendedDescription: 'To ensure PCI compliance, this data comes from Stripe, where it reflects the user\'s default payment source.'
-    },
-
-    billingCardLast4: {
-      type: 'string',
-      example: '4242',
-      description: 'The last four digits of the card number for this user\'s default billing card (or empty string if no billing card is set up).',
-      extendedDescription: 'To ensure PCI compliance, this data comes from Stripe, where it reflects the user\'s default payment source.'
-    },
-
-    billingCardExpMonth: {
-      type: 'string',
-      example: '08',
-      description: 'The two-digit expiration month from this user\'s default billing card, formatted as MM (or empty string if no billing card is set up).',
-      extendedDescription: 'To ensure PCI compliance, this data comes from Stripe, where it reflects the user\'s default payment source.'
-    },
-
-    billingCardExpYear: {
-      type: 'string',
-      example: '2023',
-      description: 'The four-digit expiration year from this user\'s default billing card, formatted as YYYY (or empty string if no credit card is set up).',
-      extendedDescription: 'To ensure PCI compliance, this data comes from Stripe, where it reflects the user\'s default payment source.'
-    },
-
     emailProofToken: {
       type: 'string',
       description: 'A pseudorandom, probabilistically-unique token for use in our account verification emails.'

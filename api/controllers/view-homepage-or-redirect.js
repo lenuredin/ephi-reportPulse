@@ -25,19 +25,13 @@ module.exports = {
 
   fn: async function ({}) {
 
-    if (this.req.me) {
+    // if confirmed, go to home, else go to account
+    if (this.req.me&&this.req.me.emailStatus!=='unconfirmed') {
       throw {redirect:'/home'};
-      // // If this user has no friends, go to the page for sending friend requests.
-      // if(this.req.me.friends.length === 0) {
-      //   throw {redirect:'/friends'};
-      // }
-      // // Otherwise, land on the 'things' page.
-      // else {
-      //   throw {redirect:'/things'};
-      // }
+    } else {
+      throw {redirect:'/account'};
     }
 
   }
-
 
 };

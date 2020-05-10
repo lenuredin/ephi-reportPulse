@@ -57,7 +57,7 @@
         <a class="navbar-brand mr-0" href="/"><img height="30" alt="ephiPulse" src="/images/ephiPulse.png"/></a>
         <div class="navbar-nav flex-row">
           <!-- LOGGED-IN NAVIGATION -->
-          <% if(me) { %>
+          <% if(me&&me.emailStatus !== 'unconfirmed') { %>
           <a class="nav-item nav-link text-dark ml-2 mr-2 <%= typeof currentSection !== 'undefined' && currentSection === 'home' ? 'current' : ''%>"
               href="/home">Home</a>
           <a class="nav-item nav-link text-dark ml-2 mr-2 <%= typeof currentSection !== 'undefined' && currentSection === 'users' ? 'current' : ''%>"
@@ -77,6 +77,17 @@
           <!-- Only in mobile nav -->
           <a class="nav-item nav-link text-dark ml-2 mr-2 d-block d-md-none" href="/account">Account</a>
           <a class="nav-item nav-link text-dark ml-2 mr-2 d-block d-md-none" href="/logout">Sign out</a>
+          <% } else if(me&&me.emailStatus === 'unconfirmed') { %>
+          <a class="nav-item nav-link text-dark ml-2 mr-2 <%= typeof currentSection !== 'undefined' && currentSection === 'contact' ? 'current' : ''%>"
+            href="/contact">Help</a>
+          <!-- Only in desktop nav -->
+          <div class="nav-item dropdown d-none d-md-block">
+            <a class="nav-link dropdown-toggle text-dark ml-2 <%= typeof currentSection !== 'undefined' && currentSection === 'contact' ? 'current' : ''%>" id="header-account-menu-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+            <div class="dropdown-menu account-menu" aria-labelledby="header-account-menu-link">
+              <a class="dropdown-item" href="/account">Profile</a>
+              <a class="dropdown-item" href="/logout">Sign out</a>
+            </div>
+          </div>
           <% } else { %>
           <!-- LOGGED-OUT NAVIGATION -->
           <!-- <a class="nav-item nav-link ml-2 mr-2" href="/faq">FAQ</a> -->
@@ -160,6 +171,7 @@
     <script src="/js/utilities/xls-form-choices.js"></script>
     <script src="/js/utilities/xls-form-dates.js"></script>
     <script src="/js/utilities/xls-form-validation.js"></script>
+    <script src="/js/pages/403.page.js"></script>
     <script src="/js/pages/498.page.js"></script>
     <script src="/js/pages/account/account-overview.page.js"></script>
     <script src="/js/pages/account/edit-password.page.js"></script>

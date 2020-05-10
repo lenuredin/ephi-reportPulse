@@ -13,6 +13,10 @@ var FormsList = {
       responseType: 'notFound'
     },
 
+    forbidden: {
+      responseType: 'forbidden'
+    },
+
     success: {
       viewTemplatePath: 'pages/forms/forms-list'
     }
@@ -28,6 +32,11 @@ var FormsList = {
 
   // run function
   fn: async function () {
+
+    // check valid user
+    if (this.req.me.emailStatus !== 'confirmed') {
+      throw 'forbidden';
+    }
 
     // fetch params
     var id = this.req.params.id;

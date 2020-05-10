@@ -1,9 +1,19 @@
 <% /* Note: This is injected into `views/layouts/layout-email.ejs` */ %>
-<p style="margin-bottom: 25px;">Welcome, <%= fullName %>!</p>
-<p style="margin-bottom: 25px;">You're almost ready to start sharing your items with friends. Just click the button below to confirm the email address for your account:</p>
+<p style="margin-bottom: 25px;">Dear, <%= fullName %>!</p>
+<p style="margin-bottom: 25px;">There has been a new user account registration for <%  %>, with the details below;
+  <div style="margin-bottom: 25px; text-align: center;">
+    <ul>
+      <li>Name: <% newUserRecord.fullName %></li>
+      <li>Number: <% newUserRecord.phoneNumber %></li>
+      <li>Email: <% newUserRecord.email %></li>
+      <li>Position: <% newUserRecord.position %></li>
+      <li>Location: <% newUserRecord.admin1name %> Region, <% newUserRecord.admin2name %> Zone, <% newUserRecord.admin3name %> Woreda.</li>
+    </ul>
+  </div>
+If you recognize this user, click the button below to confirm the email address and to enable this account:</p>
 <div style="margin-bottom: 25px; text-align: center;">
   <a style="background-color: #28AFB0; display: inline-block; font-size: 1.1em; color: #fff; padding: 10px 35px 10px; font-weight: 500; text-decoration: none; border-radius: 7px;" href="<%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %>">Confirm email</a>
 </div>
 <p style="margin-bottom: 25px;">If you have any trouble, try pasting this link in your browser: <a style="color: #28AFB0; word-wrap: break-word;" href="<%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %>"><%= url.resolve(sails.config.custom.baseUrl,'/email/confirm')+'?token='+encodeURIComponent(token) %></a></p>
 <p style="margin-bottom: 5px;">Sincerely,</p>
-<p style="margin-top: 0px;">The Ration Team</p>
+<p style="margin-top: 0px;">ephiPulse</p>

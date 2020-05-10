@@ -43,6 +43,11 @@ var AddUpdateRecord = {
 
   fn: async function ({form_name, record}) {
 
+    // check valid user
+    if (this.req.me.emailStatus !== 'confirmed') {
+      throw 'forbidden';
+    }
+
     // does the record exist?
     var recordExists = false;
 

@@ -42,6 +42,11 @@ var RemoveRecord = {
 
   fn: async function ({form_name, record}) {
 
+    // check valid user
+    if (this.req.me.emailStatus !== 'confirmed') {
+      throw 'forbidden';
+    }
+
     // model_name
     var model_name = form_name.replace(/ /g, '_') + '_core';
 

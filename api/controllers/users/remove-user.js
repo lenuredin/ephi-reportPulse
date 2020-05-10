@@ -29,6 +29,11 @@ module.exports = {
 
   fn: async function ({user}) {
 
+    // check valid user
+    if (this.req.me.emailStatus !== 'confirmed') {
+      throw 'forbidden';
+    }
+
     // Verify permissions.
     // if(todoToDestroy.owner !== this.req.me.id) {
     //   throw 'forbidden';

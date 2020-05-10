@@ -9,6 +9,10 @@ module.exports = {
 
   exits: {
 
+    forbidden: {
+      responseType: 'forbidden'
+    },
+
     success: {
       viewTemplatePath: 'pages/users/user-list'
     }
@@ -17,6 +21,11 @@ module.exports = {
 
 
   fn: async function () {
+
+    // check valid user
+    if (this.req.me.emailStatus !== 'confirmed') {
+      throw 'forbidden';
+    }
 
     // fetch all users
     var users = await User.find({});
