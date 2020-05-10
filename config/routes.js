@@ -19,9 +19,24 @@ module.exports.routes = {
   'GET /users':              { action: 'users/view-user-list' },
   'GET /forms':              { action: 'forms/view-forms' },
   'GET /forms/list/:id':     { action: 'forms/view-forms-list' },
-  // delete
+
+  // account
+  'GET /account':            { action: 'account/view-account-overview' },
+  'GET /account/:id':        { action: 'account/view-account-overview' },
+  'GET /account/password':   { action: 'account/view-edit-password' },
+  'GET /account/profile':    { action: 'account/view-edit-profile' },
+  'GET /account/profile/:id':{ action: 'account/view-edit-profile' },
+
+  // delete user
+  'DELETE /api/v1/users/remove-user': { action: 'users/remove-user' },
+
+  // delete form record
   'DELETE /api/v1/forms/remove-record': { action: 'forms/remove-record' },
   'PUT /api/v1/forms/add-update-record': { action: 'forms/add-update-record' },
+
+
+
+
 
   // 'GET /friends/:virtualPageSlug?':   { action: 'friends/view-friends' },
   // 'GET /things/:virtualPageSlug?':     { action: 'things/view-available-things' },

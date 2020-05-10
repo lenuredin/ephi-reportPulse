@@ -5,7 +5,18 @@
   <hr/>
   <div class="form-row">
     <div class="form-group col-md-4">
-      <input/> <!-- date recieved -->
+      <div class="field-wrap">
+        <!-- date of onset of disease, EC -->
+        <span class="datepicker-label">Date Recieved</span>
+        <datepicker ref="datepickerref"
+                    class="datepicker"
+                    v-model="selectedRecord.dateRecievedRaw"
+                    placeholder-text="Select"
+                    :popup="true"
+                    :invalid="formSubmitAttempt && !selectedRecord.dateRecievedRaw"
+                    validation-error-message="Please recieved.">
+        </datepicker>
+      </div>
     </div>
     <div class="form-group col-md-8">
       <label for="diseaseCondition">Disease Condition</label>
@@ -21,10 +32,30 @@
   <!-- patient type -->
   <div class="form-row">
     <div class="form-group col-md-3">
-      <input/> <!-- date of onset of disease, EC -->
+      <div class="field-wrap">
+        <!-- date of onset of disease, EC -->
+        <span class="datepicker-label">Disease Onset Date</span>
+        <datepicker ref="datepickerref"
+                    v-model="selectedRecord.diseaseOnsetDateRaw"
+                    placeholder-text="Select"
+                    :popup="true"
+                    :invalid="formSubmitAttempt && !selectedRecord.diseaseOnsetDateRaw"
+                    validation-error-message="Please select disease onset date.">
+        </datepicker>
+      </div>
     </div>
     <div class="form-group col-md-3">
-      <input/> <!-- date seen at health facility, EC -->
+      <div class="field-wrap">
+        <!-- date seen at health facility, EC -->
+        <span class="datepicker-label">Disease Seen at Facility</span>
+        <datepicker ref="datepickerref"
+                    v-model="selectedRecord.patientSeenAtHealthFacilityDateRaw"
+                    placeholder-text="Select"
+                    :popup="true"
+                    :invalid="formSubmitAttempt && !selectedRecord.patientSeenAtHealthFacilityDateRaw"
+                    validation-error-message="Please select date patient seen at health facility.">
+        </datepicker>
+      </div>
     </div>
     <div class="form-group col-md-6">
       <label for="patientType">Patient Type</label>

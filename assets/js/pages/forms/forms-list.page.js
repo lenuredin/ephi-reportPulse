@@ -35,16 +35,29 @@ parasails.registerPage('forms-list', {
   //  ║  ║╠╣ ║╣ ║  ╚╦╝║  ║  ║╣
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function() {
+
     // Attach any initial data from the server.
     _.extend(this, SAILS_LOCALS);
     // set admin filter lists for forms
     this.admin2ListFilter = this.admin2List;
     this.admin3ListFilter = this.admin3List;
     this.adminsitesListFilter = this.adminsitesList;
+
     // fetch xlsFormChoices
       // see 'assets/js/utilities/xls-form-choices.js'
     var xlsFormChoices = parasails.require('xlsFormChoices');
     this.choices = xlsFormChoices(this.form.form_name);
+
+    // format all the dates
+    var xlsFormDates = parasails.require('xlsFormDates');
+    // for all the records
+    _this = this;
+    this.records.forEach(function(record){
+      xlsFormDates(_this.form.form_name).forEach(function(field){
+        // format dates
+        record[field] = moment(record[field], 'YYYY-MM-DD').format('DD/MM/YYYY');
+      });
+    });
   },
   mounted: async function() {
     // hide alert
@@ -65,6 +78,13 @@ parasails.registerPage('forms-list', {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
+    },
+
+    // format date
+    formatDate: function(value, format){
+      if (value) {
+        return moment(String(value)).format(format);
+      }
     },
 
     // filter admin lists on select
@@ -118,7 +138,7 @@ parasails.registerPage('forms-list', {
       }
 
       // force state refresh
-     this.forceUpdate();
+     this.$forceUpdate();
 
     },
 
@@ -151,6 +171,7 @@ parasails.registerPage('forms-list', {
       // Open the modal.
       this.editViewRecordModalOpen = true;
       // add 'large-lg' class
+      var _this = this;
       setTimeout(function(){
         $('.modal-dialog').addClass('modal-lg');
       }, 201);
@@ -208,7 +229,6 @@ parasails.registerPage('forms-list', {
       // form manages UI error updates to user
       var _this = this;
       var xlsFormValidation = parasails.require('xlsFormValidation');
-
       // for default fields (across all forms)
       xlsFormValidation('default').forEach(function(field){
         if(!_this.selectedRecord[field]){
@@ -220,6 +240,14 @@ parasails.registerPage('forms-list', {
         if(!_this.selectedRecord[field]){
           _this.formErrors = true;
         }
+      });
+
+      // get date fields for this form
+      var xlsFormDates = parasails.require('xlsFormDates');
+      // for default fields (across all forms)
+      xlsFormDates(this.form.form_name).forEach(function(field){
+        // format dates
+        _this.selectedRecord[field] = moment(_this.selectedRecord[field], 'DD/MM/YYYY').format('YYYY-MM-DD');
       });
 
       // if form errors, do not send to server, return undefined
@@ -243,6 +271,17 @@ parasails.registerPage('forms-list', {
       this.formSubmitAttempt = false;
       // Show the success message.
       this.cloudSuccess = true;
+
+      // get date fields for this form
+      var xlsFormDates = parasails.require('xlsFormDates');
+      // for default fields (across all forms)
+      var _this = this;
+      xlsFormDates(this.form.form_name).forEach(function(field){
+        // format dates
+        _this.selectedRecord[field] = moment(_this.selectedRecord[field], 'YYYY-MM-DD').format('DD/MM/YYYY');
+      });
+
+      // if new record, add to list
       if ( this.formSaveLabel === 'Save' ) {
         this.selectedRecord.id =
         this.records.push(this.selectedRecord);
@@ -251,6 +290,7 @@ parasails.registerPage('forms-list', {
       $('.alert').fadeTo(6000, 500).slideUp(500, function() {
         $('.alert').slideUp(500);
       });
+
       // Close the modal.
       this.selectedRecord = undefined;
       this.confirmRemoveRecordModalOpen = false;

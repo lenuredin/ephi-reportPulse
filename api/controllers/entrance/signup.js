@@ -56,6 +56,12 @@ the account verification message.)`,
       description: 'The unencrypted password to use for the new account.'
     },
 
+    admin0administrator: {
+      type: 'boolean',
+      description: 'Federal administrator',
+      example: false
+    },
+
     admin1pcode: {
       type: 'string',
       description: 'Region Name',
@@ -66,6 +72,12 @@ the account verification message.)`,
       type: 'string',
       description: 'Region Pcode',
       example: 'ET05'
+    },
+
+    admin1administrator: {
+      type: 'boolean',
+      description: 'Region administrator',
+      example: false
     },
 
     admin2pcode: {
@@ -80,6 +92,12 @@ the account verification message.)`,
       example: 'ET0503'
     },
 
+    admin2administrator: {
+      type: 'boolean',
+      description: 'Zonal administrator',
+      example: true
+    },
+
     admin3pcode: {
       type: 'string',
       description: 'Woreda Name',
@@ -90,6 +108,12 @@ the account verification message.)`,
       type: 'string',
       description: 'Woreda Pcode',
       example: 'ET050395'
+    },
+
+    admin3administrator: {
+      type: 'boolean',
+      description: 'Woreda administrator',
+      example: true
     },
 
   },
@@ -128,12 +152,16 @@ the account verification message.)`,
       phoneNumber: inputs.phoneNumber,
       position: inputs.position,
       password: await sails.helpers.passwords.hashPassword(inputs.password),
+      admin0administrator: inputs.admin0administrator,
       admin1pcode: inputs.admin1pcode,
       admin1name: inputs.admin1name,
+      admin1administrator: inputs.admin1administrator,
       admin2pcode: inputs.admin2pcode,
       admin2name: inputs.admin2name,
+      admin2administrator: inputs.admin2administrator,
       admin3pcode: inputs.admin3pcode,
       admin3name: inputs.admin3name,
+      admin3administrator: inputs.admin3administrator,
       tosAcceptedByIp: this.req.ip
     }, sails.config.custom.verifyEmailAddresses? {
       emailProofToken: await sails.helpers.strings.random('url-friendly'),

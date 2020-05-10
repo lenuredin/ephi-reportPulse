@@ -1,33 +1,148 @@
 <div id="edit-profile" v-cloak>
   <div class="container">
-    <h1>Update personal info</h1>
+    <h1 v-if="me.id === user.id">Update My Info</h1>
+    <h1 v-if="me.id !== user.id">Update User Info</h1>
     <hr/>
     <ajax-form action="updateProfile" :syncing.sync="syncing" :cloud-error.sync="cloudError" @submitted="submittedForm()" :handle-parsing="handleParsingForm">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
           <div class="form-group">
             <label for="full-name">Full name</label>
-            <input class="form-control" id="full-name" name="full-name" type="text"  :class="[formErrors.fullName ? 'is-invalid' : '']" v-model.trim="formData.fullName" placeholder="Sturgis P. Sturgeon">
+            <input class="form-control" id="full-name" name="full-name" type="text"  :class="[formErrors.fullName ? 'is-invalid' : '']" v-model.trim="user.fullName" placeholder="Sturgis P. Sturgeon" :disabled="isDisabled()">
             <div class="invalid-feedback" v-if="formErrors.fullName">Please enter your full name.</div>
           </div>
         </div>
-        <div class="col-sm-6">
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
           <div class="form-group">
             <label for="email-address">Email address</label>
-            <input class="form-control" id="email-address" name="email-address" type="email"  :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model.trim="formData.emailAddress" placeholder="sturgeon@example.com">
+            <input class="form-control" id="email-address" name="email-address" type="email"  :class="[formErrors.emailAddress ? 'is-invalid' : '']" v-model.trim="user.emailAddress" placeholder="sturgeon@example.com" :disabled="isDisabled()">
             <div class="invalid-feedback" v-if="formErrors.emailAddress">Please enter a valid email address.</div>
           </div>
         </div>
       </div>
       <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label for="phone-number">Phone number</label>
+            <input class="form-control" id="phone-number" type="string" :class="[formErrors.phoneNumber ? 'is-invalid' : '']" v-model.trim="user.phoneNumber" placeholder="+251112758622" :disabled="isDisabled()">
+            <div class="invalid-feedback" v-if="formErrors.phoneNumber">Please enter a valid phone number.</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label for="position">Position</label>
+            <select class="form-control" id="position" v-model.trim="user.position" :class="[formErrors.position ? 'is-invalid' : '']"  @change="positionChange()" :disabled="isDisabled()">
+              <option value="undefined" disabled>Select Position...</option>
+              <% _.each(positions, function(position) { %>
+                <option value="<%= position %>"><%= position %></option>
+              <% }); %>
+            </select>
+            <div class="invalid-feedback" v-if="formErrors.position">Please enter your position.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- location -->
+      <div v-if="user.position && user.position !== 'Federal Surveillance Officer'">
+        <h5 class="text-center" style="padding-top: 20px;">Location</h5>
+        <hr v-if="user.position"/>
+        <div class="form-group"
+              v-if="user.position === 'Regional Surveillance Officer' ||
+                    user.position === 'Zonal Surveillance Officer' ||
+                    user.position === 'Woreda Surveillance Officer'">
+          <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
+          <select class="form-control" id="admin1pcode" v-model.trim="user.admin1pcode" @change="adminChange('admin1')" :disabled="isDisabled()">
+            <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
+            <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
+              {{ d.admin1name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group"
+              v-if="user.position === 'Zonal Surveillance Officer' ||
+                    user.position === 'Woreda Surveillance Officer'">
+          <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
+          <select class="form-control" id="admin2pcode" v-model.trim="user.admin2pcode" @change="adminChange('admin2')" :disabled="!user.admin1pcode" :disabled="isDisabled()">
+            <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
+            <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
+              {{ d.admin2name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group"
+              v-if="user.position === 'Woreda Surveillance Officer'">
+          <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
+          <select class="form-control" id="admin3pcode" v-model.trim="user.admin3pcode" :disabled="!user.admin2pcode" :disabled="isDisabled()">
+            <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
+            <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
+              {{ d.admin3name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- pernissions -->
+      <h5 class="text-center" style="padding-top: 20px;">Permissions</h5>
+      <hr/>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="funkyradio">
+            <div class="funkyradio-primary">
+              <input type="checkbox" name="federal" id="federal" v-model.trim="user.admin0administrator"
+                      :disabled="isDisabled() ||
+                        user.position !== 'Federal Surveillance Officer' "/>
+              <label for="federal">Federal Admin</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="funkyradio">
+            <div class="funkyradio-primary">
+              <input type="checkbox" name="regional" id="regional" v-model.trim="user.admin1administrator"
+                      :disabled="isDisabled() ||
+                        ( user.position !== 'Federal Surveillance Officer' &&
+                          user.position !== 'Regional Surveillance Officer' )"/>
+              <label for="regional">Regional Admin</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="funkyradio">
+            <div class="funkyradio-primary">
+              <input type="checkbox" name="zonal" id="zonal" v-model.trim="user.admin2administrator"
+                      :disabled="isDisabled() ||
+                        ( user.position !== 'Federal Surveillance Officer' &&
+                          user.position !== 'Regional Surveillance Officer' &&
+                          user.position !== 'Zonal Surveillance Officer') "/>
+              <label for="zonal">Zonal Admin</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="funkyradio">
+            <div class="funkyradio-primary">
+              <input type="checkbox" name="woreda" id="woreda" v-model.trim="user.admin3administrator"
+                      :disabled="isDisabled()"/>
+              <label for="woreda">Woreda Admin</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- error messages -->
+      <div class="row" style="padding-top: 40px;">
         <div class="col-sm-6">
           <p class="text-danger" v-if="cloudError === 'emailAlreadyInUse'">There is already an account using that email address.</p>
           <p class="text-danger" v-else-if="cloudError">An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</p>
         </div>
         <div class="col-sm-6">
           <div class="form-group text-right">
-            <a class="btn btn-outline-info" href="/account">Cancel</a>
-            <ajax-button type="submit" :syncing="syncing" class="btn btn-dark">Save changes</ajax-button>
+            <a class="btn btn-outline-info" @click="clickCancel(user.id)">Cancel</a>
+            <ajax-button type="submit" :syncing="syncing" class="btn btn-dark" :disabled="isDisabled()">Save changes</ajax-button>
           </div>
         </div>
       </div>

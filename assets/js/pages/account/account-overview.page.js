@@ -32,17 +32,6 @@ parasails.registerPage('account-overview', {
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function (){
     _.extend(this, window.SAILS_LOCALS);
-
-    this.isBillingEnabled = !!this.stripePublishableKey;
-
-    // Determine whether there is billing info for this user.
-    this.hasBillingCard = (
-      this.me.billingCardBrand &&
-      this.me.billingCardLast4 &&
-      this.me.billingCardExpMonth &&
-      this.me.billingCardExpYear
-    );
-
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -50,69 +39,52 @@ parasails.registerPage('account-overview', {
   //  ╩╝╚╝ ╩ ╚═╝╩╚═╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
   methods: {
 
-    clickStripeCheckoutButton: async function() {
+    // redirect to edit account
+    clickEditUser: function(userId){
+      window.location = '/account/profile/' + userId;
+    },
 
-      // Import utilities.
-      var openStripeCheckout = parasails.require('openStripeCheckout');
+    // for disabled for current user
+    isDisabled: function(){
 
-      // Prevent double-posting if it's still loading.
-      if(this.syncingUpdateCard) { return; }
+      // disabled
+      var disabled = true;
 
-      // Clear out error states.
-      this.cloudError = false;
+      // set user
+      var user = this.user;
 
-      // Open Stripe Checkout.
-      var billingCardInfo = await openStripeCheckout(this.stripePublishableKey, this.me.emailAddress);
-      if (!billingCardInfo) {
-        // (if the user canceled the dialog, avast)
-        return;
+      // if this is current users account
+      if (this.me.id === user.id) {
+        disabled = false;
+      }
+      // if super admin
+      if (this.me.isSuperAdmin) {
+        disabled = false;
+      }
+      // if federal admin
+      if (this.me.admin0administrator) {
+        disabled = false;
+      }
+      // if regional admin
+      if (this.me.admin1administrator &&
+            user.admin1pcode !== 'all' &&
+            this.me.admin1pcode === user.admin1pcode) {
+        disabled = false;
+      }
+      // if zonal admin
+      if (this.me.admin2administrator &&
+            user.admin2pcode !== 'all' &&
+            this.me.admin2pcode === user.admin2pcode) {
+        disabled = false;
+      }
+      // if woreda admin
+      if (this.me.admin3administrator &&
+            user.admin3pcode !== 'all' &&
+            this.me.admin3pcode === user.admin3pcode) {
+        disabled = false;
       }
 
-      // Now that payment info has been successfully added, update the billing
-      // info for this user in our backend.
-      this.syncingUpdateCard = true;
-      await Cloud.updateBillingCard.with(billingCardInfo)
-      .tolerate(()=>{
-        this.cloudError = true;
-      });
-      this.syncingUpdateCard = false;
-
-      // Upon success, update billing info in the UI.
-      if (!this.cloudError) {
-        Object.assign(this.me, _.pick(billingCardInfo, ['billingCardLast4', 'billingCardBrand', 'billingCardExpMonth', 'billingCardExpYear']));
-        this.hasBillingCard = true;
-      }
-    },
-
-    clickRemoveCardButton: function() {
-      this.removeCardModalVisible = true;
-    },
-
-    closeRemoveCardModal: function() {
-      this.removeCardModalVisible = false;
-      this.cloudError = false;
-    },
-
-    submittedRemoveCardForm: function() {
-
-      // Update billing info on success.
-      this.me.billingCardLast4 = undefined;
-      this.me.billingCardBrand = undefined;
-      this.me.billingCardExpMonth = undefined;
-      this.me.billingCardExpYear = undefined;
-      this.hasBillingCard = false;
-
-      // Close the modal and clear it out.
-      this.closeRemoveCardModal();
-
-    },
-
-    handleParsingRemoveCardForm: function() {
-      return {
-        // Set to empty string to indicate the default payment source
-        // for this customer is being completely removed.
-        stripeToken: ''
-      };
+      return disabled;
     },
 
   }

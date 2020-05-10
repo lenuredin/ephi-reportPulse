@@ -61,7 +61,7 @@ var RemoveRecord = {
     // if recrod still exists
     if (recordToDestroy) {
       // archinve the record in public schema
-      await Backup.create({ form: form_name, record: record }).meta({ schemaName: 'archive' });
+      await Backup.create({ table: form_name, record: record }).meta({ schemaName: 'archive' });
     }
 
   }

@@ -140,6 +140,30 @@ parasails.registerPage('signup', {
       // Validate position:
       if(!argins.position) {
         this.formErrors.position = true;
+      } else{
+        // set admin level
+        // federal
+        if(argins.position === 'Federal Surveillance Officer') {
+          argins.admin0administrator = true;
+          argins.admin1administrator = true;
+          argins.admin2administrator = true;
+          argins.admin3administrator = true;
+        }
+        // regional
+        if(argins.position === 'Regional Surveillance Officer') {
+          argins.admin1administrator = true;
+          argins.admin2administrator = true;
+          argins.admin3administrator = true;
+        }
+        // zonal
+        if(argins.position === 'Zonal Surveillance Officer') {
+          argins.admin2administrator = true;
+          argins.admin3administrator = true;
+        }
+        // woreda
+        if(argins.position === 'Woreda Surveillance Officer') {
+          argins.admin3administrator = true;
+        }
       }
 
       // Validate password:

@@ -1,6 +1,9 @@
 <div id="login" v-cloak>
   <div class="container">
-    <h1 class="text-center">Sign in to your account</h1>
+    <div class="page-header text-center">
+      <img alt="ephiPulse" src="/images/ephiPulse.png" style="width:80px;"/>
+    </div>
+    <h3 class="text-center">Sign in to your account</h3>
     <div class="login-form-container">
       <hr/>
       <ajax-form action="login" :syncing.sync="syncing" :cloud-error.sync="cloudError" @submitted="submittedForm()" :handle-parsing="handleParsingForm">
