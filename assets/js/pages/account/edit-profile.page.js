@@ -88,6 +88,24 @@ parasails.registerPage('edit-profile', {
 
     // position updated
     positionChange: function() {
+
+      // set admin level
+      // regional
+      if(this.user.position === 'Regional Surveillance Officer') {
+        this.user.admin0administrator = false;
+      }
+      // zonal
+      if(this.user.position === 'Zonal Surveillance Officer') {
+        this.user.admin0administrator = false;
+        this.user.admin1administrator = false;
+      }
+      // woreda
+      if(this.user.position === 'Woreda Surveillance Officer') {
+        this.user.admin0administrator = false;
+        this.user.admin1administrator = false;
+        this.user.admin2administrator = false;
+      }
+
       // clear admin1
       delete this.user.admin1pcode;
       delete this.user.admin1name;

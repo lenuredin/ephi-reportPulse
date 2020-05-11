@@ -21,6 +21,10 @@ module.exports = {
       type: 'string'
     },
 
+    emailStatus: {
+      type: 'string'
+    },
+
     phoneNumber: {
       required: true,
       type: 'string',
@@ -159,6 +163,7 @@ module.exports = {
       fullName: inputs.fullName,
       phoneNumber: inputs.phoneNumber,
       position: inputs.position,
+      emailStatus: inputs.emailStatus,
       admin0administrator: inputs.admin0administrator,
       admin1pcode: inputs.admin1pcode,
       admin1name: inputs.admin1name,

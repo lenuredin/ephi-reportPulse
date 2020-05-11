@@ -12,8 +12,8 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
     id: { type: 'number', autoIncrement: true, },
-    form:{ type: 'string', required: true },
-    record:{ type: 'json', required: true },
+    table: { type: 'string', required: true },
+    record: { type: 'json', required: true },
     createdAt: { type: 'number', autoCreatedAt: true, },
     updatedAt: { type: 'number', autoUpdatedAt: true, },
 

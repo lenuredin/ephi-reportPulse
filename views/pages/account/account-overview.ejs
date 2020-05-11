@@ -1,14 +1,26 @@
 <div id="account-overview" v-cloak>
   <div class="container">
+    <!-- alert -->
+    <div class="alert alert-success" role="alert">
+      User Successfully Verified!
+    </div>
     <div class="row">
       <div class="col-sm-8">
         <h1 v-if="me.id === user.id">My Account</h1>
         <h1 v-if="me.id !== user.id">{{ user.fullName }}</h1>
       </div>
       <!-- if not disabled! -->
-      <div class="col-sm-4" v-if="!isDisabled()">
+      <div class="col-sm-2">
         <span class="float-sm-right" style="padding-top: 20px;">
-          <a class="btn btn-sm btn-outline-info account-settings-button" @click="clickEditUser(user.id)">Edit profile</a>
+          <a class="btn btn-sm btn-outline-dark account-settings-button" title="Back" href="/users">Back</a>
+        </span>
+      </div>
+      <div class="col-sm-2">
+        <span v-if="user.emailStatus === 'unconfirmed'" class="float-sm-right" style="padding-top: 20px;">
+          <a class="btn btn-sm btn-warning account-settings-button" title="Verify profile" @click="clickVerifyUser(user.id)">Verify profile</a>
+        </span>
+        <span v-if="user.emailStatus === 'confirmed'" class="float-sm-right" style="padding-top: 20px;">
+          <button class="btn btn-sm btn-outline-info account-settings-button" title="Edit profile" @click="clickEditUser(user.id)">Edit profile</button>
         </span>
       </div>
     </div>
@@ -112,7 +124,65 @@
         <div class="col"><strong>••••••••••</strong></div>
       </div>
     </div>
+
+    <!-- error messages -->
+    <div class="row" style="padding-top: 40px;">
+      <div class="col-sm-6">
+        <p class="text-danger" v-if="cloudError">An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</p>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group text-right">
+          <a class="btn btn-outline-info" href="/users">Cancel</a>
+          <button type="submit" v-if="me.id !== user.id" :syncing="syncing" class="btn btn-danger" :disabled="isDisabled()" @click="clickRemoveUser()">Remove user</button>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <% /* "Verify user" modal */ %>
+  <modal v-if="confirmVerifyUserModalOpen" v-cloak key="remove" @close="closeUserModal()">
+    <div class="modal-header">
+      <h5 class="modal-title">Verify {{user.fullName}}?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="updateProfile" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingVerifyUserForm" @submitted="submittedVerifyUserForm($event)">
+      <div class="modal-body">
+        <h5>Verify Profile</h5>
+        <p>Update this account to enable access to ephiPulse</p>
+        <p>Are you sure you want to verify {{user.fullName}}?</p>
+        <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Cancel</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-warning ml-1">Verify User</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
+
+  <% /* "Remove user" modal */ %>
+  <modal v-if="confirmRemoveUserModalOpen" v-cloak key="remove" @close="closeUserModal()">
+    <div class="modal-header">
+      <h5 class="modal-title">Remove {{user.fullName}}?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="removeUser" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingRemoveUserForm" @submitted="submittedRemoveUserForm($event)">
+      <div class="modal-body">
+        <h5>Warning!</h5>
+        <p>This action cannot be undone! Are you sure you want to remove this record?</p>
+        <p>Are you sure you want to remove {{user.fullName}}?</p>
+        <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-dark mr-1">Cancel</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-danger ml-1">Remove User</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
 
 </div>
 <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

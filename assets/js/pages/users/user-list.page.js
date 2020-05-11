@@ -16,8 +16,13 @@ parasails.registerPage('user-list', {
     // selected user
     selectedUser: false,
 
+    // update message
+    userUpdatestatus: 'Removed',
+
     // open confirm delete modal
+    confirmVerifyUserModalOpen: false,
     confirmRemoveUserModalOpen: false
+
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -82,13 +87,51 @@ parasails.registerPage('user-list', {
       return disabled;
     },
 
+    /* VIEW USER */
+
     // navigate to user
     clickViewUser: function(userId){
       window.location = '/account/' + userId;
     },
 
+    /* VERIFIY USER */
+
+    // prompt remove user
+    clickVerifyUser: function(userId) {
+      // update message
+      this.userUpdatestatus = 'Verified';
+      // select
+      this.selectedUser = _.find(this.userList, {id: userId});
+      // Open the modal.
+      this.confirmVerifyUserModalOpen = true;
+    },
+
+    // send user to server
+    handleParsingVerifyUserForm: function(){
+      this.selectedUser.emailStatus = 'confirmed';
+      return this.selectedUser;
+    },
+
+    // user submitted
+    submittedVerifyUserForm: function(){
+      // Show the success message.
+      this.cloudSuccess = true;
+      // alert
+      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
+        $('.alert').slideUp(500);
+      });
+      // Close the modal.
+      this.selectedUser = undefined;
+      this.confirmVerifyUserModalOpen = false;
+    },
+
+    /* REMOVE USER */
+
     // prompt remove user
     clickRemoveUser: function(userId) {
+      // update message
+      this.userUpdatestatus = 'Removed';
+      // select user
       this.selectedUser = _.find(this.userList, {id: userId});
       // Open the modal.
       this.confirmRemoveUserModalOpen = true;
@@ -97,11 +140,11 @@ parasails.registerPage('user-list', {
     // handle parsing
     handleParsingRemoveUserForm: function(){
       return {
-        form: 'user',
         user: this.selectedUser
       }
     },
 
+    // user submitted
     submittedRemoveUserForm: function(){
       // Show the success message.
       this.cloudSuccess = true;
@@ -117,9 +160,10 @@ parasails.registerPage('user-list', {
     },
 
     // close modal
-    closeRemoveUserModal: function(){
+    closeUserModal: function(){
       // reset
       this.selectedUser = undefined;
+      this.confirmVerifyUserModalOpen = false;
       this.confirmRemoveUserModalOpen = false;
       this.cloudError = '';
     }

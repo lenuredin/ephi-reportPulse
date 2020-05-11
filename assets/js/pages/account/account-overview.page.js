@@ -4,27 +4,16 @@ parasails.registerPage('account-overview', {
   //  ╩╝╚╝╩ ╩ ╩╩ ╩╩═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝
   data: {
 
-    me: { /* ... */ },
-
-    isBillingEnabled: false,
-
-    hasBillingCard: false,
-
-    // Syncing/loading states for this page.
-    syncingUpdateCard: false,
-    syncingRemoveCard: false,
-
-    // Form data
-    formData: { /* … */ },
+    // Main syncing/loading state for this page.
+    syncing: false,
 
     // Server error state for the form
     cloudError: '',
 
-    // For the Stripe checkout window
-    checkoutHandler: undefined,
+    // verify modal
+    confirmVerifyUserModalOpen: false,
+    confirmRemoveUserModalOpen: false,
 
-    // For the confirmation modal:
-    removeCardModalVisible: false,
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -32,6 +21,10 @@ parasails.registerPage('account-overview', {
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function (){
     _.extend(this, window.SAILS_LOCALS);
+  },
+  mounted: function(){
+    // hide alert
+    $('.alert').hide();
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -86,6 +79,69 @@ parasails.registerPage('account-overview', {
 
       return disabled;
     },
+
+    /* VERIFIY USER */
+
+    // very user
+    clickVerifyUser: function(){
+      this.confirmVerifyUserModalOpen = true;
+    },
+
+    // handle verification
+    handleParsingVerifyUserForm: function(){
+      this.user.emailStatus = 'confirmed';
+      return this.user;
+    },
+
+    // on submit
+    submittedVerifyUserForm: function() {
+      // alert
+      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
+        $('.alert').slideUp(500);
+      });
+      // close modal
+      this.confirmVerifyUserModalOpen = false;
+    },
+
+    /* REMOVE USER */
+
+    // prompt remove user
+    clickRemoveUser: function() {
+      // Open the modal.
+      this.confirmRemoveUserModalOpen = true;
+    },
+
+    // handle parsing
+    handleParsingRemoveUserForm: function(){
+      return {
+        user: this.user
+      }
+    },
+
+    // user submitted
+    submittedRemoveUserForm: function(){
+      // Show the success message.
+      this.cloudSuccess = true;
+      // alert
+      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
+        $('.alert').slideUp(500);
+      });
+      // close modal
+      this.confirmRemoveUserModalOpen = false;
+      // redirect
+      window.location = '/users';
+    },
+
+    /* GENERIC */
+
+    // close modal
+    closeUserModal: function(){
+      // reset
+      this.confirmVerifyUserModalOpen = false;
+      this.confirmRemoveUserModalOpen = false;
+      this.cloudError = '';
+    }
+
 
   }
 });

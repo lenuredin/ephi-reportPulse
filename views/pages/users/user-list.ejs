@@ -10,7 +10,7 @@
 
     <!-- alert -->
     <div class="alert alert-success" role="alert">
-      User Successfully Removed!
+      User Successfully {{ userUpdatestatus }}!
     </div>
 
     <!-- records list -->
@@ -39,13 +39,33 @@
               <td class="d-none d-md-table-cell">{{user.admin1name}} {{user.admin2name}}, {{user.admin3name}}</td>
               <!-- buttons -->
               <td class="actions-column" align="horizontal">
-                <div class="row">
-                  <div class="col-6" align="right">
+                <!-- unconfirmed -->
+                <div class="row" v-if="user.emailStatus === 'unconfirmed'">
+                  <div align="right">
+                    <button type="button" title="Verify User" @click="clickVerifyUser(user.id)" class="btn btn-labeled btn-outline-warning">
+                      <span class="btn-label"><i class="fa fa-user-plus"></i></span>
+                    </button>
+                  </div>
+                  <div>
                     <button type="button" title="View User" @click="clickViewUser(user.id)" class="btn btn-labeled btn-outline-primary">
                       <span class="btn-label"><i class="fa fa-eye"></i></span>
                     </button>
                   </div>
-                  <div class="col-6" align="left">
+                  <div align="left">
+                    <button type="button" title="Remove User" class="btn btn-labeled btn-outline-danger"
+                              v-if="me.id !== user.id"
+                              :disabled="isDisabled(user.id)" @click="clickRemoveUser(user.id)">
+                      <span class="btn-label"><i class="fa fa-trash"></i></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="row"v-if="user.emailStatus === 'confirmed'">
+                  <div align="right">
+                    <button type="button" title="View User" @click="clickViewUser(user.id)" class="btn btn-labeled btn-outline-primary">
+                      <span class="btn-label"><i class="fa fa-eye"></i></span>
+                    </button>
+                  </div>
+                  <div align="left">
                     <button type="button" title="Remove User" class="btn btn-labeled btn-outline-danger"
                               v-if="me.id !== user.id"
                               :disabled="isDisabled(user.id)" @click="clickRemoveUser(user.id)">
@@ -62,8 +82,31 @@
 
   </div>
 
+
+  <% /* "Verify user" modal */ %>
+  <modal v-if="confirmVerifyUserModalOpen && selectedUser" v-cloak key="remove" @close="closeUserModal()">
+    <div class="modal-header">
+      <h5 class="modal-title">Verify {{selectedUser.fullName}}?</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ajax-form action="updateProfile" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingVerifyUserForm" @submitted="submittedVerifyUserForm($event)">
+      <div class="modal-body">
+        <h5>Verify Profile</h5>
+        <p>Update this account to enable access to ephiPulse</p>
+        <p>Are you sure you want to verify {{selectedUser.fullName}}?</p>
+        <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</small></p>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Cancel</button>
+        <ajax-button type="submit" :syncing="syncing" class="btn btn-warning ml-1">Verify User</ajax-button>
+      </div>
+    </ajax-form>
+  </modal>
+
   <% /* "Remove user" modal */ %>
-  <modal v-if="confirmRemoveUserModalOpen && selectedUser" v-cloak key="remove" @close="closeRemoveUserModal()">
+  <modal v-if="confirmRemoveUserModalOpen && selectedUser" v-cloak key="remove" @close="closeUserModal()">
     <div class="modal-header">
       <h5 class="modal-title">Remove {{selectedUser.fullName}}?</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -78,7 +121,7 @@
         <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again, or <a href="/contact">contact support</a> if the error persists.</small></p>
       </div>
       <div class="modal-footer">
-        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Nevermind</button>
+        <button data-dismiss="modal" class="btn btn-outline-secondary mr-1">Cancel</button>
         <ajax-button type="submit" :syncing="syncing" class="btn btn-danger ml-1">Remove User</ajax-button>
       </div>
     </ajax-form>
