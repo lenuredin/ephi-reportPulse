@@ -34,7 +34,7 @@ parasails.registerPage('user-list', {
   },
   mounted: async function() {
     // hide alert
-    $('.alert').hide();
+    $('#alert-msg').hide();
     // datatable
     $('#user-list-table').DataTable();
   },
@@ -117,8 +117,8 @@ parasails.registerPage('user-list', {
       // Show the success message.
       this.cloudSuccess = true;
       // alert
-      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
-        $('.alert').slideUp(500);
+      $('#alert-msg').fadeTo(6000, 500).slideUp(500, function() {
+        $('#alert-msg').slideUp(500);
       });
       // Close the modal.
       this.selectedUser = undefined;
@@ -151,8 +151,8 @@ parasails.registerPage('user-list', {
       // Remove the thing from the list
       _.remove(this.userList, {id: this.selectedUser.id});
       // alert
-      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
-        $('.alert').slideUp(500);
+      $('#alert-msg').fadeTo(6000, 500).slideUp(500, function() {
+        $('#alert-msg').slideUp(500);
       });
       // Close the modal.
       this.selectedUser = undefined;

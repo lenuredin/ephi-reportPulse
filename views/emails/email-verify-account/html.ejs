@@ -1,13 +1,13 @@
 <% /* Note: This is injected into `views/layouts/layout-email.ejs` */ %>
 <p style="margin-bottom: 25px;">Dear, <%= fullName %>!</p>
-<p style="margin-bottom: 25px;">There has been a new user account registration for <%  %>, with the details below;
+<p style="margin-bottom: 25px;">There has been a new user account registration for<%= newUserRecord.admin1name %> Region, <%= newUserRecord.admin2name %> Zone, <%= newUserRecord.admin3name %> Woreda, with the details below;
   <div style="margin-bottom: 25px; text-align: center;">
     <ul>
-      <li>Name: <% newUserRecord.fullName %></li>
-      <li>Number: <% newUserRecord.phoneNumber %></li>
-      <li>Email: <% newUserRecord.email %></li>
-      <li>Position: <% newUserRecord.position %></li>
-      <li>Location: <% newUserRecord.admin1name %> Region, <% newUserRecord.admin2name %> Zone, <% newUserRecord.admin3name %> Woreda.</li>
+      <li>Name: <%= newUserRecord.fullName %></li>
+      <li>Number: <%= newUserRecord.phoneNumber %></li>
+      <li>Email: <%= newUserRecord.email %></li>
+      <li>Position: <%= newUserRecord.position %></li>
+      <li>Location: <%= newUserRecord.admin1name %> Region, <%= newUserRecord.admin2name %> Zone, <%= newUserRecord.admin3name %> Woreda.</li>
     </ul>
   </div>
 If you recognize this user, click the button below to confirm the email address and to enable this account:</p>

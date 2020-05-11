@@ -61,7 +61,7 @@ parasails.registerPage('forms-list', {
   },
   mounted: async function() {
     // hide alert
-    $('.alert').hide();
+    $('#alert-msg').hide();
     // dataTable tables
     $('#record-list-pending-validation-table').DataTable();
     $('#record-list-validated-table').DataTable();
@@ -287,8 +287,8 @@ parasails.registerPage('forms-list', {
         this.records.push(this.selectedRecord);
       }
       // alert
-      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
-        $('.alert').slideUp(500);
+      $('#alert-msg').fadeTo(6000, 500).slideUp(500, function() {
+        $('#alert-msg').slideUp(500);
       });
 
       // Close the modal.
@@ -324,8 +324,8 @@ parasails.registerPage('forms-list', {
       // Remove the thing from the list
       _.remove(this.records, {id: this.selectedRecord.id});
       // alert
-      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
-        $('.alert').slideUp(500);
+      $('#alert-msg').fadeTo(6000, 500).slideUp(500, function() {
+        $('#alert-msg').slideUp(500);
       });
       // Close the modal.
       this.selectedRecord = undefined;

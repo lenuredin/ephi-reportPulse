@@ -172,20 +172,10 @@ the account verification message.)`,
     .intercept({name: 'UsageError'}, 'invalid')
     .fetch();
 
-    // If billing feaures are enabled, save a new customer entry in the Stripe API.
-    // Then persist the Stripe customer id in the database.
-    if (sails.config.custom.enableBillingFeatures) {
-      let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
-        emailAddress: newEmailAddress
-      }).timeout(5000).retry();
-      await User.updateOne(newUserRecord.id)
-      .set({
-        stripeCustomerId
-      });
-    }
-
     // Store the user's new id in their session.
     this.req.session.userId = newUserRecord.id;
+
+    console.log(sails.config.custom.verifyEmailAddresses)
 
     // send notificaiton of new user account registrstion for full chain of reporting
     if (sails.config.custom.verifyEmailAddresses) {
@@ -199,37 +189,40 @@ the account verification message.)`,
       if(inputs.admin3administrator) {
         var zonalAdmins = await User.find({ admin2pcode: inputs.admin2pcode, admin2administrator: true });
         zonalAdmins.forEach(function(d){
-          emails += d.email + ',';
+          emails += d.emailAddress + ',';
           if (!fullName) {
             fullName = d.fullName;
           }
         });
       }
+      console.log('woreda');
       // zonal
       if(inputs.admin2administrator || inputs.admin3administrator) {
         var regionalAdmins = await User.find({ admin1pcode: inputs.admin1pcode, admin1administrator: true });
         regionalAdmins.forEach(function(d){
-          emails += d.email + ',';
+          emails += d.emailAddress + ',';
           if (!fullName) {
             fullName = d.fullName;
           }
         });
       }
+      console.log('zonal');
       // regional
       if(inputs.admin1administrator || inputs.admin2administrator || inputs.admin3administrator) {
         var federalAdmins = await User.find({ admin0administrator: true });
         federalAdmins.forEach(function(d){
-          emails += d.email + ',';
+          emails += d.emailAddress + ',';
           if (!fullName) {
             fullName = d.fullName;
           }
         });
       }
+      console.log('regional');
 
       // find super users by default
       var superAdmins = await User.find({ isSuperAdmin: true });
       superAdmins.forEach(function(d){
-        emails += d.email + ',';
+        emails += d.emailAddress + ',';
         if (!fullName) {
           fullName = d.fullName;
         }
@@ -238,6 +231,21 @@ the account verification message.)`,
       emails = emails.slice( 0, -1 );
 
       console.log(emails);
+
+      // send email
+      sails.hooks.email.send( 'email-contact-form', {
+        fullName: fullName,
+        newUserRecord: newUserRecord,
+        token: newUserRecord.emailProofToken
+      },{
+        to: emails,
+        subject: 'Please confirm new account - ' + moment().format('LLL'),
+      }, function(err) {
+        // return
+        if ( err ) return 'error';
+        // return
+        return;
+      });
 
       // send email
       sails.hooks.email.send( 'email-verify-account', {

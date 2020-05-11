@@ -21,10 +21,11 @@ parasails.registerPage('account-overview', {
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function (){
     _.extend(this, window.SAILS_LOCALS);
+    console.log(this.me.emailStatus);
   },
   mounted: function(){
     // hide alert
-    $('.alert').hide();
+    $('#alert-msg').hide();
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -96,8 +97,8 @@ parasails.registerPage('account-overview', {
     // on submit
     submittedVerifyUserForm: function() {
       // alert
-      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
-        $('.alert').slideUp(500);
+      $('#alert-msg').fadeTo(6000, 500).slideUp(500, function() {
+        $('#alert-msg').slideUp(500);
       });
       // close modal
       this.confirmVerifyUserModalOpen = false;
@@ -123,8 +124,8 @@ parasails.registerPage('account-overview', {
       // Show the success message.
       this.cloudSuccess = true;
       // alert
-      $('.alert').fadeTo(6000, 500).slideUp(500, function() {
-        $('.alert').slideUp(500);
+      $('#alert-msg').fadeTo(6000, 500).slideUp(500, function() {
+        $('#alert-msg').slideUp(500);
       });
       // close modal
       this.confirmRemoveUserModalOpen = false;

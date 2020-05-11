@@ -1,7 +1,7 @@
 <div id="account-overview" v-cloak>
   <div class="container">
     <!-- alert -->
-    <div class="alert alert-success" role="alert">
+    <div id="alert-msg" class="alert alert-success" role="alert">
       User Successfully Verified!
     </div>
     <div class="row">
@@ -11,15 +11,15 @@
       </div>
       <!-- if not disabled! -->
       <div class="col-sm-2">
-        <span class="float-sm-right" style="padding-top: 20px;">
+        <span v-if="user.emailStatus !== 'unconfirmed'" class="float-sm-right" style="padding-top: 20px;">
           <a class="btn btn-sm btn-outline-dark account-settings-button" title="Back" href="/users">Back</a>
         </span>
       </div>
       <div class="col-sm-2">
-        <span v-if="user.emailStatus === 'unconfirmed'" class="float-sm-right" style="padding-top: 20px;">
+        <span v-if="me.id !== user.id && user.emailStatus === 'unconfirmed'" class="float-sm-right" style="padding-top: 20px;">
           <a class="btn btn-sm btn-warning account-settings-button" title="Verify profile" @click="clickVerifyUser(user.id)">Verify profile</a>
         </span>
-        <span v-if="user.emailStatus === 'confirmed'" class="float-sm-right" style="padding-top: 20px;">
+        <span class="float-sm-right" style="padding-top: 20px;">
           <button class="btn btn-sm btn-outline-info account-settings-button" title="Edit profile" @click="clickEditUser(user.id)">Edit profile</button>
         </span>
       </div>
@@ -132,7 +132,7 @@
       </div>
       <div class="col-sm-6">
         <div class="form-group text-right">
-          <a class="btn btn-outline-info" href="/users">Cancel</a>
+          <a v-if="user.emailStatus !== 'unconfirmed'" class="btn btn-outline-info" href="/users">Cancel</a>
           <button type="submit" v-if="me.id !== user.id" :syncing="syncing" class="btn btn-danger" :disabled="isDisabled()" @click="clickRemoveUser()">Remove user</button>
         </div>
       </div>

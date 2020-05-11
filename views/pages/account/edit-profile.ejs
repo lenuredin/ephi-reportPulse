@@ -1,13 +1,13 @@
 <div id="edit-profile" v-cloak>
   <div class="container">
     <div class="row">
-      <div class="col-sm-8">
+      <div class="col-sm-10">
         <h1 v-if="me.id === user.id">Update My Info</h1>
         <h1 v-if="me.id !== user.id">Update User Info</h1>
       </div>
       <div class="col-sm-2">
         <span class="float-sm-right" style="padding-top: 20px;">
-          <a class="btn btn-sm btn-outline-dark account-settings-button" title="Back" @click="clickCancel(user.id)">Back</a>
+          <button class="btn btn-sm btn-outline-dark account-settings-button" title="Back" @click="clickCancel(user.id)">Back</button>
         </span>
       </div>
     </div>

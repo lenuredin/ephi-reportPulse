@@ -29,8 +29,11 @@ parasails.registerPage('edit-profile', {
     this.admin2ListFilter = this.admin2List;
     this.admin3ListFilter = this.admin3List;
 
-    //
+    // emailAddress has changed?
     this.user.emailAddress = this.user.emailChangeCandidate ? this.user.emailChangeCandidate : this.user.emailAddress;
+  },
+  mounted: function(){
+    //
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -130,12 +133,12 @@ parasails.registerPage('edit-profile', {
       if ( level === 'admin1' ) {
 
         // clear admin2
-        delete this.user.admin2pcode;
-        delete this.user.admin2name;
+        this.user.admin2pcode = 'all';
+        this.user.admin2name = 'All';
 
         // clear admin3
-        delete this.user.admin3pcode;
-        delete this.user.admin3name;
+        this.user.admin3pcode = 'all';
+        this.user.admin3name = 'All';
         this.admin3ListFilter = [];
 
         // filter admin2
@@ -148,8 +151,8 @@ parasails.registerPage('edit-profile', {
       if ( level === 'admin2' ) {
 
         // clear admin2
-        delete this.user.admin3pcode;
-        delete this.user.admin3name;
+        this.user.admin3pcode = 'all';
+        this.user.admin3name = 'All';
 
         // filter admin3
         this.admin3ListFilter = _.filter(this.admin3List, function(item) {
