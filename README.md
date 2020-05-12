@@ -49,6 +49,7 @@ Generates the following files
 - assets/styles/pages/things/available-things.less
 - assets/js/pages/things/available-things.page.js
 
+```
     A few reminders:
      (1)  These files were generated assuming your Sails app is using
           Vue.js as its front-end framework.  (If you're unsure,
@@ -64,6 +65,7 @@ Generates the following files
 
      (4)  Last but not least, since some of the above are backend changes,
           don't forget to re-lift the server before testing!
+```
           
 ### Generate a new model
 
