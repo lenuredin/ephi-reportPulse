@@ -44,11 +44,12 @@ Steps
 ``sails generate page things/available-things``
 
 Generates the following files
-    - views/pages/things/available-things.ejs
-    - api/controllers/things/view-available-things.ejs
-    - assets/styles/pages/things/available-things.less
-    - assets/js/pages/things/available-things.page.js
-
+```
+  - views/pages/things/available-things.ejs
+  - api/controllers/things/view-available-things.ejs
+  - assets/styles/pages/things/available-things.less
+  - assets/js/pages/things/available-things.page.js
+```
 ```
     A few reminders:
      (1)  These files were generated assuming your Sails app is using
