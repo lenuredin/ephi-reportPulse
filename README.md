@@ -73,8 +73,8 @@ Steps
 
 ``sails generate model Thing``
 
-Generates the following files
-- api/models/Things.js
+    Generates the following files
+    - api/models/Things.js
 
 ### Generate a new action
 
@@ -82,24 +82,27 @@ Steps
 
 ``sails generate action things/destroy-one-thing``
 
-Generates the following files
-- api/controllers/things/destroy-one-thing.js
+    Generates the following files
+    - api/controllers/things/destroy-one-thing.js
 
-Udpate config/routes.js
-``DELETE /api/v1/destroy-one-thing { action: 'things/destroy-one-thing' }``
+    Udpate config/routes.js
+    ``DELETE /api/v1/destroy-one-thing { action: 'things/destroy-one-thing' }``
 
-Usage
-``<ajax-form action="destroyOneThing"></ajax-form>``
+    Usage
+    ``<ajax-form action="destroyOneThing"></ajax-form>``
 
 ### Build SailsJS cloud SDK
-``sudo sails run scripts/rebuild-cloud-sdk.js``
+
+Dont forget to build the SDK after generating the new action
+
+    ``sudo sails run scripts/rebuild-cloud-sdk.js``
 
 
 # Adding a new ODK Form
 
-Steps
-
 The following updates are required for each new form added to ODK Aggregate.
+
+Steps
 
 1. Add a new model to 'api/models/forms/' based on the new ODK Aggregate form.
 > The name of the model should match the name of the ODK Aggreate table in PHEM schema
