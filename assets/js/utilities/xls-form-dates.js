@@ -18,7 +18,8 @@ parasails.registerUtility('xlsFormDates', function xlsFormDates(formName) {
     'Line List':[
       'dateRecievedRaw',
       'diseaseOnsetDateRaw',
-      'patientSeenAtHealthFacilityDateRaw'
+      'patientSeenAtHealthFacilityDateRaw',
+      'specimenTakenDateRaw'
     ],
   }
 

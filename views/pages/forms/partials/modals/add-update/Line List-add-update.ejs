@@ -47,7 +47,7 @@
     <div class="form-group col-md-3">
       <div class="field-wrap">
         <!-- date seen at health facility, EC -->
-        <span class="datepicker-label">Disease Seen at Facility</span>
+        <span class="datepicker-label">Patient Seen at Facility Date</span>
         <datepicker ref="datepickerref"
                     v-model="selectedRecord.patientSeenAtHealthFacilityDateRaw"
                     placeholder-text="Select"
@@ -113,7 +113,17 @@
       <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.specimenTaken">Please enter Specimen Taken.</div>
     </div>
     <div v-if="selectedRecord.specimenTaken === 'yes'" class="form-group col-md-6">
-      <input/> <!-- date of onset of disease, EC -->
+      <div class="field-wrap">
+        <!-- date seen at health facility, EC -->
+        <span class="datepicker-label">Specimen Taken Date</span>
+        <datepicker ref="datepickerref"
+                    v-model="selectedRecord.specimenTakenDateRaw"
+                    placeholder-text="Select"
+                    :popup="true"
+                    :invalid="formSubmitAttempt && !selectedRecord.specimenTakenDateRaw"
+                    validation-error-message="Please select date specimen was taken.">
+        </datepicker>
+      </div>
     </div>
     <div v-if="selectedRecord.specimenTaken === 'yes'" class="form-group col-md-6">
       <label for="labResult">Lab Results</label>
