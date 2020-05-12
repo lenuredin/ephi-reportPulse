@@ -30,6 +30,9 @@ module.exports = {
 
   fn: async function (inputs) {
 
+    // node url
+    var url = require('url');
+
     // Find the record for this user.
     // (Even if no such user exists, pretend it worked to discourage sniffing.)
     var userRecord = await User.findOne({ emailAddress: inputs.emailAddress });
@@ -50,14 +53,17 @@ module.exports = {
     });
 
     // Send recovery email
-    await sails.helpers.sendTemplateEmail.with({
+    sails.hooks.email.send( 'email-reset-password', {
+      fullName: userRecord.fullName,
+      confirmUrl: url.resolve(sails.config.custom.baseUrl,'/password/new')+'?token='+encodeURIComponent(token)
+    },{
       to: inputs.emailAddress,
       subject: 'Password reset instructions',
-      template: 'email-reset-password',
-      templateData: {
-        fullName: userRecord.fullName,
-        token: token
-      }
+    }, function(err) {
+      // return
+      if ( err ) return 'error';
+      // return
+      return;
     });
 
   }

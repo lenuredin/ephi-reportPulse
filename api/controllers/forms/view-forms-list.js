@@ -41,9 +41,9 @@ var FormsList = {
     // fetch params
     var id = this.req.params.id;
     // set default to all
-    var admin1pcode = this.req.params.admin1pcode ? this.req.params.admin1pcode : 'all';
-    var admin2pcode = this.req.params.admin2pcode ? this.req.params.admin2pcode : 'all';
-    var admin3pcode = this.req.params.admin3pcode ? this.req.params.admin3pcode : 'all';
+    var admin1pcode = this.req.me.admin1pcode ? this.req.me.admin1pcode : 'all';
+    var admin2pcode = this.req.me.admin2pcode ? this.req.me.admin2pcode : 'all';
+    var admin3pcode = this.req.me.admin3pcode ? this.req.me.admin3pcode : 'all';
 
     // fetch form
     var form = await _form_info.findOne({ id: id }).meta({ schemaName: 'phem' });
@@ -60,12 +60,6 @@ var FormsList = {
     var admin1pcode_filter = admin1pcode === 'all' ? {} : { admin1pcode: admin1pcode }
     var admin2pcode_filter = admin2pcode === 'all' ? {} : { admin2pcode: admin2pcode }
     var admin3pcode_filter = admin3pcode === 'all' ? {} : { admin3pcode: admin3pcode }
-
-    //
-    console.log( model_name );
-    console.log( admin1pcode_filter );
-    console.log( admin2pcode_filter );
-    console.log( admin3pcode_filter );
 
     // fetch form records
     var odk_records = await FormsList.parseModel(model_name)

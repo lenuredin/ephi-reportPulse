@@ -142,7 +142,61 @@ the account verification message.)`,
 
   fn: async function (inputs) {
 
+    // new email address
     var newEmailAddress = inputs.emailAddress.toLowerCase();
+
+    // set notificaiton params (before creating the new user account)
+    if (sails.config.custom.verifyEmailAddresses) {
+
+      // emails
+      var emails = '';
+      var fullName = false;
+      var moment = require('moment');
+      var url = require('url');
+
+      // woreda
+      if(inputs.admin3administrator) {
+        var zonalAdmins = await User.find({ emailStatus: 'confirmed', admin2pcode: inputs.admin2pcode, admin2administrator: true });
+        zonalAdmins.forEach(function(d){
+          emails += d.emailAddress + ',';
+          if (!fullName) {
+            fullName = d.fullName;
+          }
+        });
+      }
+      // zonal
+      if(inputs.admin2administrator || inputs.admin3administrator) {
+        var regionalAdmins = await User.find({ emailStatus: 'confirmed', admin1pcode: inputs.admin1pcode, admin1administrator: true });
+        regionalAdmins.forEach(function(d){
+          emails += d.emailAddress + ',';
+          if (!fullName) {
+            fullName = d.fullName;
+          }
+        });
+      }
+      // regional
+      if(inputs.admin1administrator || inputs.admin2administrator || inputs.admin3administrator) {
+        var federalAdmins = await User.find({ emailStatus: 'confirmed', admin0administrator: true });
+        federalAdmins.forEach(function(d){
+          emails += d.emailAddress + ',';
+          if (!fullName) {
+            fullName = d.fullName;
+          }
+        });
+      }
+
+      // find super users by default
+      var superAdmins = await User.find({ isSuperAdmin: true });
+      superAdmins.forEach(function(d){
+        emails += d.emailAddress + ',';
+        if (!fullName) {
+          fullName = d.fullName;
+        }
+      });
+      // remove last comma
+      emails = emails.slice( 0, -1 );
+
+    }
 
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
@@ -175,86 +229,23 @@ the account verification message.)`,
     // Store the user's new id in their session.
     this.req.session.userId = newUserRecord.id;
 
-    console.log(sails.config.custom.verifyEmailAddresses)
-
     // send notificaiton of new user account registrstion for full chain of reporting
     if (sails.config.custom.verifyEmailAddresses) {
-
-      // emails
-      var emails = '';
-      var fullName = false;
-      var moment = require('moment');
-
-      // woreda
-      if(inputs.admin3administrator) {
-        var zonalAdmins = await User.find({ admin2pcode: inputs.admin2pcode, admin2administrator: true });
-        zonalAdmins.forEach(function(d){
-          emails += d.emailAddress + ',';
-          if (!fullName) {
-            fullName = d.fullName;
-          }
-        });
-      }
-      console.log('woreda');
-      // zonal
-      if(inputs.admin2administrator || inputs.admin3administrator) {
-        var regionalAdmins = await User.find({ admin1pcode: inputs.admin1pcode, admin1administrator: true });
-        regionalAdmins.forEach(function(d){
-          emails += d.emailAddress + ',';
-          if (!fullName) {
-            fullName = d.fullName;
-          }
-        });
-      }
-      console.log('zonal');
-      // regional
-      if(inputs.admin1administrator || inputs.admin2administrator || inputs.admin3administrator) {
-        var federalAdmins = await User.find({ admin0administrator: true });
-        federalAdmins.forEach(function(d){
-          emails += d.emailAddress + ',';
-          if (!fullName) {
-            fullName = d.fullName;
-          }
-        });
-      }
-      console.log('regional');
-
-      // find super users by default
-      var superAdmins = await User.find({ isSuperAdmin: true });
-      superAdmins.forEach(function(d){
-        emails += d.emailAddress + ',';
-        if (!fullName) {
-          fullName = d.fullName;
-        }
-      });
-      // remove last comma
-      emails = emails.slice( 0, -1 );
-
-      console.log(emails);
-
-      // send email
-      sails.hooks.email.send( 'email-contact-form', {
-        fullName: fullName,
-        newUserRecord: newUserRecord,
-        token: newUserRecord.emailProofToken
-      },{
-        to: emails,
-        subject: 'Please confirm new account - ' + moment().format('LLL'),
-      }, function(err) {
-        // return
-        if ( err ) return 'error';
-        // return
-        return;
-      });
 
       // send email
       sails.hooks.email.send( 'email-verify-account', {
         fullName: fullName,
-        newUserRecord: newUserRecord,
-        token: newUserRecord.emailProofToken
+        newUserfullName: newUserRecord.fullName,
+        newUserphoneNumber: newUserRecord.phoneNumber,
+        newUseremailAddress: newUserRecord.emailAddress,
+        newUserposition: newUserRecord.position,
+        newUseradmin1name: newUserRecord.admin1name,
+        newUseradmin2name: newUserRecord.admin2name,
+        newUseradmin3name: newUserRecord.admi3name,
+        confirmUrl: url.resolve(sails.config.custom.baseUrl,'/email/confirm') + '?token=' + encodeURIComponent(newUserRecord.emailProofToken),
       },{
         to: emails,
-        subject: 'Please confirm new account - ' + moment().format('LLL'),
+        subject: 'Please confirm new account of ' + newUserRecord.fullName + ' - Registrstion ' + moment().format('LLL'),
       }, function(err) {
         // return
         if ( err ) return 'error';

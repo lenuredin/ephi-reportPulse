@@ -74,7 +74,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
         emailProofToken: '',
         emailProofTokenExpiresAt: 0
       });
-      this.req.session.userId = user.id;
+      // this.req.session.userId = user.id;
 
       if (this.req.wantsJSON) {
         return;
