@@ -80,13 +80,6 @@ parasails.registerPage('forms-list', {
       });
     },
 
-    // format date
-    formatDate: function(value, format){
-      if (value) {
-        return moment(String(value)).format(format);
-      }
-    },
-
     // filter admin lists on select
     adminChange: function( level ) {
 
@@ -184,16 +177,6 @@ parasails.registerPage('forms-list', {
       this.formErrors = false;
       this.formSubmitAttempt = true;
 
-      // if a new entry, set init sailsjs values required in model
-      if ( this.formSaveLabel === 'Save' ) {
-        // set uuid
-        this.selectedRecord.id = 'uuid:' + this.uuididv4();
-        //user, createdAt, updatedAt
-        this.selectedRecord.creatorUser = this.me.emailAddress;
-        this.selectedRecord.createdAt = new Date();
-        this.selectedRecord.updatedAt = new Date();
-      }
-
       // set admin
       var argins = this.selectedRecord;
       // Set admin1name
@@ -242,14 +225,6 @@ parasails.registerPage('forms-list', {
         }
       });
 
-      // get date fields for this form
-      var xlsFormDates = parasails.require('xlsFormDates');
-      // for default fields (across all forms)
-      xlsFormDates(this.form.form_name).forEach(function(field){
-        // format dates
-        _this.selectedRecord[field] = moment(_this.selectedRecord[field], 'DD/MM/YYYY').format('YYYY-MM-DD');
-      });
-
       // if form errors, do not send to server, return undefined
       if (this.formErrors){
         return;
@@ -257,6 +232,28 @@ parasails.registerPage('forms-list', {
 
       // if no errors, send to server for processing
       if (!this.formErrors){
+
+        // if a new entry, set init sailsjs values required in model
+        if (!this.selectedRecord.id) {
+          // set uuid
+          this.selectedRecord.id = 'uuid:' + this.uuididv4();
+          //user, createdAt, updatedAt
+          this.selectedRecord.creatorUser = this.me.emailAddress;
+          this.selectedRecord.createdAt = new Date();
+          this.selectedRecord.updatedAt = new Date();
+        }
+
+        // get date fields for this form
+        var xlsFormDates = parasails.require('xlsFormDates');
+        // for default fields (across all forms)
+        xlsFormDates(this.form.form_name).forEach(function(field){
+          // format dates for the database to match ODK format
+          if(_this.selectedRecord[field]) {
+            _this.selectedRecord[field] = moment(_this.selectedRecord[field], 'DD/MM/YYYY').format('YYYY-MM-DD');
+          }
+        });
+
+        // send record to server
         return {
           form_name: this.form.form_name,
           record: this.selectedRecord
@@ -267,6 +264,7 @@ parasails.registerPage('forms-list', {
 
     // handle submission
     submittedAddUpdateRecordForm: function(){
+
       // reset form errors
       this.formSubmitAttempt = false;
       // Show the success message.
@@ -283,7 +281,6 @@ parasails.registerPage('forms-list', {
 
       // if new record, add to list
       if ( this.formSaveLabel === 'Save' ) {
-        this.selectedRecord.id =
         this.records.push(this.selectedRecord);
       }
       // alert

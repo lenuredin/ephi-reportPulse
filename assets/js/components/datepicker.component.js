@@ -60,13 +60,13 @@ parasails.registerComponent('datepicker', {
     this.databaseFormatData = this.databaseFormat ? this.databaseFormat : 'yy-mm-dd';
 
     // init
+    var _this = this;
     this.$find('[datepicker-el]').datepicker({
       dateFormat: _this.dateFormatData,
       onSelect: (dateText, datepicker)=> {//eslint-disable-line no-unused-vars
         this.$emit('input', dateText);
       }
     });
-
   },
 
   //  ╦╔╗╔╔╦╗╔═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
@@ -75,7 +75,8 @@ parasails.registerComponent('datepicker', {
   methods: {
 
     doParseDate: function() {
-      return $.datepicker.parseDate(this.databaseFormatData, this.value);
+      var _this = this;
+      return $.datepicker.parseDate(_this.databaseFormatData, this.value);
     }
 
   }
