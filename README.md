@@ -22,16 +22,29 @@ Reference Libraries
 4. [VueJS](https://vuejs.org/)
 > VueJS for front-end interaction and rendering
 
-
 # Running ephiPulse
 
 Steps
 
 1. In the terminal, clone this repository and navigate into ``ephi-reportPulse``
 
-2. Install dependecies; run ``sudo npm install``
+2. Install dependecies; run `sudo npm install`
 
-3. Start server; run ``sudo sails lift``
+3. Start server; run `sudo sails lift`
+
+# Making changes
+
+In order to make changes to the codebase, be sure to use the Branch Pull Request approach, outlined [here](https://guides.github.com/introduction/flow/) and in the diagram below.
+
+`git pull origin master`
+`git checkout -b feature-sirc-form`
+> make codebase changes....
+`git stage -A`
+`git commit -m "feature: updated SIRC model to add attributes" -a`
+`git push origin feature-sirc-form`
+> Go to GitHub and make a Pull Request on this branch to the main repository
+
+![github flow](https://www.dropbox.com/s/cxrpbce72h9qcy0/github-flow.png?)
 
 # Sails Comamnds
 
