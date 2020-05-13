@@ -130,6 +130,26 @@ module.exports = {
       type: 'string',
       columnName: 'COMMENTS'
     },
+    // admin0valid: {
+    //   type: 'boolean',
+    //   defaultsTo: false,
+    //   columnName: 'ADMIN0VALID'
+    // },
+    // admin1valid: {
+    //   type: 'boolean',
+    //   defaultsTo: false,
+    //   columnName: 'ADMIN1VALID'
+    // },
+    // admin2valid: {
+    //   type: 'boolean',
+    //   defaultsTo: false,
+    //   columnName: 'ADMIN2VALID'
+    // },
+    // admin3valid: {
+    //   type: 'boolean',
+    //   defaultsTo: false,
+    //   columnName: 'ADMIN3VALID'
+    // },
     admin1pcode: {
       type: 'string',
       columnName: 'ADMIN1PCODE'

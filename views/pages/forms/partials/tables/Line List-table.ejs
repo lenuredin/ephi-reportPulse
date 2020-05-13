@@ -29,7 +29,7 @@
             <span class="btn-label"><i class="fa fa-eye"></i></span>
           </button>
         </div>
-        <div class="col-6" align="left">
+        <div class="col-6" align="left" v-if="!isDisabledList(d.id)">
           <button type="button" title="Remove Record" class="btn btn-labeled btn-outline-danger" @click="clickRemoveRecord(d.id)">
             <span class="btn-label"><i class="fa fa-trash"></i></span>
           </button>

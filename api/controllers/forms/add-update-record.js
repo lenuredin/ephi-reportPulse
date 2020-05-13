@@ -62,8 +62,6 @@ var AddUpdateRecord = {
     // does record exist?
     recordExists = await AddUpdateRecord.parseModel(model_name).findOne({ id: record.id }).meta({ schemaName: 'phem' });
 
-    console.log( recordExists );
-
     // if no existing record, create
     if ( !recordExists) {
       // destroy and fetch form records

@@ -80,6 +80,38 @@ parasails.registerPage('forms-list', {
       });
     },
 
+    // disable form for current user
+    // currently the result enables only admin3 level (woreda surveillance officers)
+    // to add, edit and delete form records. This will need to be reviewed and updated
+    // to match the requirements. This approach is quite limiting for reporting. I would
+    // reccomend that admin2 level (zonal surveillance officers) should have edit and delete
+    // capabilities, as they are likely in a location with stable internet and this will
+    // avoid reporting bottlenecks - as aposed to waiting for surveillance officers to make updates
+    // which could take time and adds undue burden to the woreda surveillance officer.
+    isDisabled: function(){
+      // disabled
+      var disabled = true;
+      if (this.selectedRecord) {
+        // if current user is at same admin3 level as record, edit enabled
+        if (this.me.admin3pcode === this.selectedRecord.admin3pcode) {
+          disabled = false;
+        }
+      }
+      return disabled;
+    },
+
+    isDisabledList: function(recordId){
+      // disabled
+      var disabled = true;
+      // set selected
+      var record = _.find(this.records, {id: recordId});
+      // if current user is at same admin3 level as record, edit enabled
+      if (this.me.admin3pcode === record.admin3pcode) {
+        disabled = false;
+      }
+      return disabled;
+    },
+
     // filter admin lists on select
     adminChange: function( level ) {
 

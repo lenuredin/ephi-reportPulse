@@ -72,7 +72,7 @@ var FormsList = {
 
     // admin1
     var admin1 = await eth_admin_1.find({
-      where: {},
+      where: admin1pcode_filter,
       select: [ 'admin1pcode', 'admin1name', 'admin1type_name' ]
     })
     .meta({ schemaName: 'admin' })
@@ -80,7 +80,7 @@ var FormsList = {
 
     // admin2
     var admin2 = await eth_admin_2.find({
-      where: {},
+      where: admin2pcode_filter,
       select: [ 'admin1pcode', 'admin1name', 'admin1type_name', 'admin2pcode', 'admin2name', 'admin2type_name' ]
     })
     .meta({ schemaName: 'admin' })
@@ -88,7 +88,7 @@ var FormsList = {
 
     // admin3
     var admin3 = await eth_admin_3.find({
-      where: {},
+      where: admin3pcode_filter,
       select: [ 'admin1pcode', 'admin1name', 'admin1type_name', 'admin2pcode', 'admin2name', 'admin2type_name', 'admin3pcode', 'admin3name', 'admin3type_name' ]
     })
     .meta({ schemaName: 'admin' })
@@ -96,7 +96,7 @@ var FormsList = {
 
     // health_facilities
     var adminsites = await eth_adminsites.find({
-      where: {},
+      where: admin3pcode_filter,
       select: [ 'admin1pcode', 'admin1name', 'admin1type_name', 'admin2pcode', 'admin2name', 'admin2type_name', 'admin3pcode', 'admin3name', 'admin3type_name', 'site_id', 'site_name' ]
     })
     .meta({ schemaName: 'admin' })
@@ -119,8 +119,6 @@ var FormsList = {
       // esnure records id does not get overwritted
       records.push( Object.assign(d, admin3record, { id: d.id } ) );
     });
-
-    console.log(records);
 
     // Respond with view.
     return {

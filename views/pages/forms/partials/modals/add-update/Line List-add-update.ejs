@@ -8,7 +8,11 @@
       <div class="field-wrap">
         <!-- date of onset of disease, EC -->
         <span class="datepicker-label">Date Recieved</span>
-        <datepicker ref="datepickerref"
+        <!-- if disabled, show as input -->
+        <input v-if="isDisabled()" class="form-control" id="dateRecievedRaw" type="text" v-model.trim="selectedRecord.dateRecievedRaw" :disabled="isDisabled()">
+        <!-- if enabled, enabled datepicker for selection -->
+        <datepicker v-if="!isDisabled()"
+                    ref="datepickerref"
                     class="datepicker"
                     v-model="selectedRecord.dateRecievedRaw"
                     placeholder-text="Select"
@@ -20,7 +24,7 @@
     </div>
     <div class="form-group col-md-8">
       <label for="diseaseCondition">Disease Condition</label>
-      <select class="form-control" id="diseaseCondition" v-model.trim="selectedRecord.diseaseCondition" :class="[formSubmitAttempt && !selectedRecord.diseaseCondition ? 'is-invalid' : '']" @change="forceUpdate()">
+      <select class="form-control" id="diseaseCondition" v-model.trim="selectedRecord.diseaseCondition" :class="[formSubmitAttempt && !selectedRecord.diseaseCondition ? 'is-invalid' : '']" @change="forceUpdate()" :disabled="isDisabled()" >
         <option value="undefined" disabled>Select Disease...</option>
         <option v-for="d in choices.diseases" v-bind:value="d.name">
           {{ d.label }}
@@ -35,12 +39,17 @@
       <div class="field-wrap">
         <!-- date of onset of disease, EC -->
         <span class="datepicker-label">Disease Onset Date</span>
-        <datepicker ref="datepickerref"
+        <!-- if disabled, show as input -->
+        <input v-if="isDisabled()" class="form-control" id="diseaseOnsetDateRaw" type="text" v-model.trim="selectedRecord.diseaseOnsetDateRaw" :disabled="isDisabled()">
+        <!-- if enabled, enabled datepicker for selection -->
+        <datepicker v-if="!isDisabled()"
+                    ref="datepickerref"
                     v-model="selectedRecord.diseaseOnsetDateRaw"
                     placeholder-text="Select"
                     :popup="true"
                     :invalid="formSubmitAttempt && !selectedRecord.diseaseOnsetDateRaw"
-                    validation-error-message="Please select disease onset date.">
+                    validation-error-message="Please select disease onset date."
+                    :disabled="isDisabled()">
         </datepicker>
       </div>
     </div>
@@ -48,18 +57,23 @@
       <div class="field-wrap">
         <!-- date seen at health facility, EC -->
         <span class="datepicker-label">Patient Seen Date</span>
-        <datepicker ref="datepickerref"
+        <!-- if disabled, show as input -->
+        <input v-if="isDisabled()" class="form-control" id="patientSeenAtHealthFacilityDateRaw" type="text" v-model.trim="selectedRecord.patientSeenAtHealthFacilityDateRaw" :disabled="isDisabled()">
+        <!-- if enabled, enabled datepicker for selection -->
+        <datepicker v-if="!isDisabled()"
+                    ref="datepickerref"
                     v-model="selectedRecord.patientSeenAtHealthFacilityDateRaw"
                     placeholder-text="Select"
                     :popup="true"
                     :invalid="formSubmitAttempt && !selectedRecord.patientSeenAtHealthFacilityDateRaw"
-                    validation-error-message="Please select date patient seen at health facility.">
+                    validation-error-message="Please select date patient seen at health facility."
+                    :disabled="isDisabled()">
         </datepicker>
       </div>
     </div>
     <div class="form-group col-md-6">
       <label for="patientType">Patient Type</label>
-      <select class="form-control" id="patientType" v-model.trim="selectedRecord.patientType" :class="[formSubmitAttempt && !selectedRecord.patientType ? 'is-invalid' : '']" @change="forceUpdate()">
+      <select class="form-control" id="patientType" v-model.trim="selectedRecord.patientType" :class="[formSubmitAttempt && !selectedRecord.patientType ? 'is-invalid' : '']" @change="forceUpdate()" :disabled="isDisabled()">
         <option value="undefined" disabled>Select Patient Type...</option>
         <option v-for="d in choices.patientTypes" v-bind:value="d.name">
           {{ d.label }}
@@ -72,12 +86,12 @@
   <div class="form-row">
     <div class="form-group col-md-4">
       <label for="name">Patient Name</label>
-      <input class="form-control" id="name" type="text" :class="[formSubmitAttempt && !selectedRecord.name ? 'is-invalid' : '']" v-model.trim="selectedRecord.name" @change="forceUpdate()">
+      <input class="form-control" id="name" type="text" :class="[formSubmitAttempt && !selectedRecord.name ? 'is-invalid' : '']" v-model.trim="selectedRecord.name" @change="forceUpdate()" :disabled="isDisabled()">
       <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.name">Please enter Patient Name.</div>
     </div>
     <div class="form-group col-md-4">
       <label for="patientType">Gender</label>
-      <select class="form-control" id="gender" :class="[formSubmitAttempt && !selectedRecord.gender ? 'is-invalid' : '']" v-model.trim="selectedRecord.gender" @change="forceUpdate()">
+      <select class="form-control" id="gender" :class="[formSubmitAttempt && !selectedRecord.gender ? 'is-invalid' : '']" v-model.trim="selectedRecord.gender" @change="forceUpdate()" :disabled="isDisabled()">
         <option value="undefined" disabled>Select Gender...</option>
         <option v-for="d in choices.genders" v-bind:value="d.name">
           {{ d.label }}
@@ -87,14 +101,14 @@
     </div>
     <div class="form-group col-md-4">
       <label for="age">Age</label>
-      <input class="form-control" id="age" type="number" :class="[formSubmitAttempt && !selectedRecord.age ? 'is-invalid' : '']" v-model.trim="selectedRecord.age" @change="forceUpdate()">
+      <input class="form-control" id="age" type="number" :class="[formSubmitAttempt && !selectedRecord.age ? 'is-invalid' : '']" v-model.trim="selectedRecord.age" @change="forceUpdate()" :disabled="isDisabled()">
       <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.age">Please enter Patient Age.</div>
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="kebeleTownHouseNo">Kebele/PA's Town, House No.</label>
-      <input class="form-control" id="kebeleTownHouseNo" type="text" :class="[formSubmitAttempt && !selectedRecord.kebeleTownHouseNo ? 'is-invalid' : '']" v-model.trim="selectedRecord.kebeleTownHouseNo" @change="forceUpdate()">
+      <input class="form-control" id="kebeleTownHouseNo" type="text" :class="[formSubmitAttempt && !selectedRecord.kebeleTownHouseNo ? 'is-invalid' : '']" v-model.trim="selectedRecord.kebeleTownHouseNo" @change="forceUpdate()" :disabled="isDisabled()">
       <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.kebeleTownHouseNo">Please enter patient Kebele/PA's Town, House No.</div>
     </div>
   </div>
@@ -104,7 +118,7 @@
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="patientType">Specimen Taken</label>
-      <select class="form-control" id="specimenTaken" v-model.trim="selectedRecord.specimenTaken" :class="[formSubmitAttempt && !selectedRecord.specimenTaken ? 'is-invalid' : '']" @change="forceUpdate()">
+      <select class="form-control" id="specimenTaken" v-model.trim="selectedRecord.specimenTaken" :class="[formSubmitAttempt && !selectedRecord.specimenTaken ? 'is-invalid' : '']" @change="forceUpdate()" :disabled="isDisabled()">
         <option value="undefined" disabled>Select Specimen Taken...</option>
         <option v-for="d in choices.yesNo" v-bind:value="d.name">
           {{ d.label }}
@@ -116,22 +130,27 @@
       <div class="field-wrap">
         <!-- date seen at health facility, EC -->
         <span class="datepicker-label">Specimen Taken Date</span>
-        <datepicker ref="datepickerref"
+        <!-- if disabled, show as input -->
+        <input v-if="isDisabled()" class="form-control" id="specimenTakenDateRaw" type="text" v-model.trim="selectedRecord.specimenTakenDateRaw" :disabled="isDisabled()">
+        <!-- if enabled, enabled datepicker for selection -->
+        <datepicker v-if="!isDisabled()"
+                    ref="datepickerref"
                     v-model="selectedRecord.specimenTakenDateRaw"
                     placeholder-text="Select"
                     :popup="true"
                     :invalid="formSubmitAttempt && !selectedRecord.specimenTakenDateRaw"
-                    validation-error-message="Please select date specimen was taken.">
+                    validation-error-message="Please select date specimen was taken."
+                    :disabled="isDisabled()">
         </datepicker>
       </div>
     </div>
     <div v-if="selectedRecord.specimenTaken === 'yes'" class="form-group col-md-6">
       <label for="labResult">Lab Results</label>
-      <input class="form-control" id="labResult" type="text" v-model.trim="selectedRecord.labResult" @change="forceUpdate()">
+      <input class="form-control" id="labResult" type="text" v-model.trim="selectedRecord.labResult" @change="forceUpdate()" :disabled="isDisabled()">
     </div>
     <div class="form-group col-md-12">
       <label for="outcome">Outcome</label>
-      <select class="form-control" id="outcome" v-model.trim="selectedRecord.outcome" :class="[formSubmitAttempt && !selectedRecord.outcome ? 'is-invalid' : '']" @change="forceUpdate()">
+      <select class="form-control" id="outcome" v-model.trim="selectedRecord.outcome" :class="[formSubmitAttempt && !selectedRecord.outcome ? 'is-invalid' : '']" @change="forceUpdate()" :disabled="isDisabled()">
         <option value="undefined" disabled>Select Outcome...</option>
         <option v-for="d in choices.outcomes" v-bind:value="d.name">
           {{ d.label }}
@@ -144,6 +163,6 @@
   <h5 class="text-center">Comments</h5>
   <hr/>
   <div class="form-row">
-    <textarea class="form-control" id="comments" v-model.trim="selectedRecord.comments"></textarea>
+    <textarea class="form-control" id="comments" v-model.trim="selectedRecord.comments" :disabled="isDisabled()"></textarea>
   </div>
 </div>

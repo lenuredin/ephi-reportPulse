@@ -21,7 +21,6 @@ parasails.registerPage('account-overview', {
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function (){
     _.extend(this, window.SAILS_LOCALS);
-    console.log(this.me.emailStatus);
   },
   mounted: function(){
     // hide alert
