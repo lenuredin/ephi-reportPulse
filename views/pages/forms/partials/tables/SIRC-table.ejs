@@ -1,12 +1,22 @@
 <thead>
   <tr>
-    <th>ID</th>
+    <th>Health Facility</th>
+    <th>Week start date</th>
+    <th>Week end date (dd/mm/yy)</th>
+    <th>Region</th>
+    <th>Zone</th>
+    <th>Woreda</th>
     <th class="actions-column">Manage</th>
   </tr>
 </thead>
 <tbody>
   <tr v-for="d in records">
-    <td><strong>{{ d.id }}</strong></td>
+    <td>{{ d.site_name }}</td>
+    <td>{{ d.weekStartDate }}</td>
+    <td>{{ d.weekEndDate }}</td>
+    <td>{{ d.admin1name }}</td>
+    <td>{{ d.admin2name }}</td>
+    <td>{{ d.admin3name }}</td>
     <!-- buttons -->
     <td class="actions-column" align="horizontal">
       <div class="row">
@@ -15,7 +25,7 @@
             <span class="btn-label"><i class="fa fa-eye"></i></span>
           </button>
         </div>
-        <div class="col-6" align="left">
+        <div class="col-6" align="left" v-if="!isDisabledList(d.id)">
           <button type="button" title="Remove Record" class="btn btn-labeled btn-outline-danger" @click="clickRemoveRecord(d.id)">
             <span class="btn-label"><i class="fa fa-trash"></i></span>
           </button>

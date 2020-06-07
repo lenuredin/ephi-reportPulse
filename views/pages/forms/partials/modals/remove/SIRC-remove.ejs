@@ -1,7 +1,7 @@
 <!-- line list details -->
 <h5>Details</h5>
-<p>Disease: {{ selectedRecord.diseaseCondition }}, Date:{{ selectedRecord.diseaseOnsetDateRaw }}
+<p>Facility: {{ selectedRecord.site_name }}, Date:{{ selectedRecord.weekStartDate }}
   <br/>
-  {{ selectedRecord.gender }}, {{ selectedRecord.age }} years, {{ selectedRecord.admin1name }} Region, {{ selectedRecord.admin2name }} Zone, {{ selectedRecord.admin3name }} Woreda.
+   {{ selectedRecord.admin1name }} Region, {{ selectedRecord.admin2name }} Zone, {{ selectedRecord.admin3name }} Woreda.
 </p>
 <p class="text-danger" v-if="cloudError"><small>An error occured while processing your request. Please check your information and try again</small></p>

@@ -1,84 +1,263 @@
 <!-- location -->
 <div>
-  <!-- location -->
-  <h5 class="text-center">Location</h5>
-  <hr/>
-  <div class="form-row">
-    <div class="form-group col-md-4">
-      <label for="admin1pcode">{{ admin1List[ 0 ].admin1type_name }}</label>
-      <select class="form-control" id="admin1pcode" v-model.trim="selectedRecord.admin1pcode" @change="adminChange('admin1')">
-        <option value="undefined" disabled>Select {{ admin1List[ 0 ].admin1type_name }}...</option>
-        <option v-for="d in admin1List" v-bind:value="d.admin1pcode">
-          {{ d.admin1name }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group col-md-4">
-      <label for="admin2pcode">{{ admin2List[ 0 ].admin2type_name }}</label>
-      <select class="form-control" id="admin2pcode" v-model.trim="selectedRecord.admin2pcode" @change="adminChange('admin2')" :disabled="!selectedRecord.admin1pcode">
-        <option value="undefined" disabled>Select {{ admin2List[ 0 ].admin2type_name }}...</option>
-        <option v-for="d in admin2ListFilter" v-bind:value="d.admin2pcode">
-          {{ d.admin2name }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group col-md-4">
-      <label for="admin3pcode">{{ admin3List[ 0 ].admin3type_name }}</label>
-      <select class="form-control" id="admin3pcode" v-model.trim="selectedRecord.admin3pcode" :disabled="!selectedRecord.admin2pcode">
-        <option value="undefined" disabled>Select {{ admin3List[ 0 ].admin3type_name }}...</option>
-        <option v-for="d in admin3ListFilter" v-bind:value="d.admin3pcode">
-          {{ d.admin3name }}
-        </option>
-      </select>
-    </div>
-<!--     <div class="form-group col-md-3">
-      <label for="site_id">Health Facilities</label>
-      <select class="form-control" id="site_id" v-model.trim="selectedRecord.site_id" :disabled="!selectedRecord.admin3pcode">
-        <option value="undefined" disabled>Select Health Facility...</option>
-        <option v-for="d in adminsitesListFilter" v-bind:value="d.site_id">
-          {{ d.site_name }}
-        </option>
-      </select>
-    </div> -->
-  </div>
-  <!-- location -->
+  <!-- details -->
   <h5 class="text-center">Details</h5>
   <hr/>
   <div class="form-row">
-    <div class="form-group col-md-4">
-
+    <div class="form-group col-md-6">
+      <div class="field-wrap">
+        <!-- date of onset of disease, EC -->
+        <span class="datepicker-label">Start of Week from Monday</span>
+        <!-- if disabled, show as input -->
+        <input v-if="isDisabled()" class="form-control" id="weekStartDate" type="text" v-model.trim="selectedRecord.weekStartDate" :disabled="isDisabled()">
+        <!-- if enabled, enabled datepicker for selection -->
+        <datepicker v-if="!isDisabled()"
+                    ref="datepickerref"
+                    class="datepicker"
+                    v-model="selectedRecord.weekStartDate"
+                    placeholder-text="Select"
+                    :popup="true"
+                    :invalid="formSubmitAttempt && !selectedRecord.weekStartDate"
+                    validation-error-message="Week satrt date required.">
+        </datepicker>
+      </div>
     </div>
-    <div class="form-group col-md-8">
-      <label for="diseaseCondition">Disease Condition</label>
-      <select class="form-control" id="diseaseCondition" v-model.trim="selectedRecord.diseaseCondition">
-        <option value="undefined" disabled>Select Disease...</option>
-        <option v-for="d in choices.diseases" v-bind:value="d.name">
-          {{ d.label }}
-        </option>
-      </select>
+    <div class="form-group col-md-6">
+      <div class="field-wrap">
+        <!-- date of onset of disease, EC -->
+        <span class="datepicker-label">End of Week - Sunday</span>
+        <!-- if disabled, show as input -->
+        <input v-if="isDisabled()" class="form-control" id="weekEndDate" type="text" v-model.trim="selectedRecord.weekEndDate" :disabled="isDisabled()">
+        <!-- if enabled, enabled datepicker for selection -->
+        <datepicker v-if="!isDisabled()"
+                    ref="datepickerref"
+                    class="datepicker"
+                    v-model="selectedRecord.weekEndDate"
+                    placeholder-text="Select"
+                    :popup="true"
+                    :invalid="formSubmitAttempt && !selectedRecord.weekEndDate"
+                    validation-error-message="Week end date required.">
+        </datepicker>
+      </div>
     </div>
   </div>
+<hr/>
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <h5 class="text-center">AFP/Polio</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="afpPolioCases">Cases</label>
+        <input class="form-control" id="afpPolioCases" type="text" :class="[formSubmitAttempt && !selectedRecord.afpPolioCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.afpPolioCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.afpPolioCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="aftPolioDeaths">Deaths</label>
+        <input class="form-control" id="aftPolioDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.aftPolioDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.aftPolioDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.aftPolioDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Anthrax</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="antraxCases">Cases</label>
+        <input class="form-control" id="antraxCases" type="text" :class="[formSubmitAttempt && !selectedRecord.antraxCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.antraxCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.antraxCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="antraxDeaths">Deaths</label>
+        <input class="form-control" id="antraxDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.antraxDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.antraxDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.antraxDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-  <!-- patient type -->
-    <!-- In Patient -->
-    <!-- Out Patient -->
-  <!-- name -->
-  <!-- Kebele/PA's Town, House No. -->
-  <!-- Gender -->
-  <!-- Age -->
-  <!-- date seen at health facility, EC -->
-  <!-- date of onset of disease, EC -->
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Cholera</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="choleraCases">Cases</label>
+        <input class="form-control" id="choleraCases" type="text" :class="[formSubmitAttempt && !selectedRecord.choleraCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.choleraCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.choleraCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="choleraDeaths">Deaths</label>
+        <input class="form-control" id="choleraDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.choleraDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.choleraDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.choleraDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Measles</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="measlesCases">Cases</label>
+        <input class="form-control" id="measlesCases" type="text" :class="[formSubmitAttempt && !selectedRecord.measlesCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.measlesCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.measlesCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="measlesDeaths">Deaths</label>
+        <input class="form-control" id="measlesDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.measlesDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.measlesDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.measlesDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- Lab Tests -->
-  <!-- specimen taken (yes/no) -->
-  <!-- specimen taken date -->
-  <!-- Lab results -->
 
-  <!-- outcome -->
-    <!-- live, dead -->
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Neonatal Tetanus</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="neonatalTetanusCases">Cases</label>
+        <input class="form-control" id="neonatalTetanusCases" type="text" :class="[formSubmitAttempt && !selectedRecord.neonatalTetanusCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.neonatalTetanusCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.neonatalTetanusCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="neonatalTetanusDeaths">Deaths</label>
+        <input class="form-control" id="neonatalTetanusDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.neonatalTetanusDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.neonatalTetanusDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.neonatalTetanusDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Pandemic Influenza</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="influenzaCases">Cases</label>
+        <input class="form-control" id="influenzaCases" type="text" :class="[formSubmitAttempt && !selectedRecord.influenzaCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.influenzaCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.influenzaCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="influenzaDeaths">Deaths</label>
+        <input class="form-control" id="influenzaDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.influenzaDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.influenzaDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.influenzaDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- comments -->
 
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <h5 class="text-center">SARS</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="sarsCases">Cases</label>
+        <input class="form-control" id="sarsCases" type="text" :class="[formSubmitAttempt && !selectedRecord.sarsCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.sarsCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.sarsCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="sarsDeaths">Deaths</label>
+        <input class="form-control" id="sarsDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.sarsDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.sarsDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.sarsDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Small Pox</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="smallPoxCases">Cases</label>
+        <input class="form-control" id="smallPoxCases" type="text" :class="[formSubmitAttempt && !selectedRecord.smallPoxCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.smallPoxCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.smallPoxCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="smallPoxDeaths">Deaths</label>
+        <input class="form-control" id="smallPoxDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.smallPoxDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.smallPoxDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.smallPoxDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="form-row">
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Viral Hemorrhagic Fever</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="viralHemorrhagicFeverCases">Cases</label>
+        <input class="form-control" id="viralHemorrhagicFeverCases" type="text" :class="[formSubmitAttempt && !selectedRecord.viralHemorrhagicFeverCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.viralHemorrhagicFeverCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.viralHemorrhagicFeverCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="viralHemorrhagicFeverDeaths">Deaths</label>
+        <input class="form-control" id="viralHemorrhagicFeverDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.viralHemorrhagicFeverDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.viralHemorrhagicFeverDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.viralHemorrhagicFeverDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-md-6">
+    <h5 class="text-center">Yellow Fever</h5>
+    <hr/>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="yellowFeverCases">Cases</label>
+        <input class="form-control" id="yellowFeverCases" type="text" :class="[formSubmitAttempt && !selectedRecord.yellowFeverCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.yellowFeverCases" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.yellowFeverCases">Please enter cases.</div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="yellowFeverDeaths">Deaths</label>
+        <input class="form-control" id="yellowFeverDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.yellowFeverDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.yellowFeverDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+        <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.yellowFeverDeaths">Please enter deaths.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <hr/>
+<div class="form-row">
+  <div class="form-group col-md-4">
+    <label for="guineaWormCases">Guinea worm Cases</label>
+    <input class="form-control" id="guineaWormCases" type="text" :class="[formSubmitAttempt && !selectedRecord.guineaWormCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.guineaWormCases" @change="forceUpdate()" :disabled="isDisabled()">
+    <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.guineaWormCases">Please enter cases.</div>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="maternalDeath">Maternal Death</label>
+    <input class="form-control" id="maternalDeath" type="text" :class="[formSubmitAttempt && !selectedRecord.maternalDeath ? 'is-invalid' : '']" v-model.trim="selectedRecord.maternalDeath" @change="forceUpdate()" :disabled="isDisabled()">
+    <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.maternalDeath">Please enter cases.</div>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="prenatalDeaths">Perinatal Death</label>
+    <input class="form-control" id="prenatalDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.prenatalDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.prenatalDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+    <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.prenatalDeaths">Please enter cases.</div>
+  </div>
+</div>
+<hr/>
+<div class="form-row">
+  <div class="form-group col-md-4">
+    <label for="otherDiseaseName">Other Disease Name</label>
+    <input class="form-control" id="otherDiseaseName" type="text" :class="[formSubmitAttempt && !selectedRecord.otherDiseaseName ? 'is-invalid' : '']" v-model.trim="selectedRecord.otherDiseaseName" @change="forceUpdate()" :disabled="isDisabled()">
+    <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.otherDiseaseName">Please enter cases.</div>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="otherDiseaseCases">Other Disease Cases</label>
+    <input class="form-control" id="otherDiseaseCases" type="text" :class="[formSubmitAttempt && !selectedRecord.otherDiseaseCases ? 'is-invalid' : '']" v-model.trim="selectedRecord.otherDiseaseCases" @change="forceUpdate()" :disabled="isDisabled()">
+    <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.otherDiseaseCases">Please enter cases.</div>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="otherDiseaseDeaths">Other Disease Deaths</label>
+    <input class="form-control" id="otherDiseaseDeaths" type="text" :class="[formSubmitAttempt && !selectedRecord.otherDiseaseDeaths ? 'is-invalid' : '']" v-model.trim="selectedRecord.otherDiseaseDeaths" @change="forceUpdate()" :disabled="isDisabled()">
+    <div class="invalid-feedback" v-if="formSubmitAttempt && !selectedRecord.otherDiseaseDeaths">Please enter cases.</div>
+  </div>
+</div>
+   
 
 </div>
